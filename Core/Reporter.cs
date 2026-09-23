@@ -1,7 +1,10 @@
+using Core.Utilities;
+
 namespace Core
 {
-    public class Reporter
+    public sealed record ReporterId(Guid Id) : StrongTypedId(Id);
+    public class Reporter : Entity<ReporterId>
     {
-        public Reporter()  => throw new NotImplementedException();
+
     }
 }

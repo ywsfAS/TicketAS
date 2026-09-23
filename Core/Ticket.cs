@@ -25,7 +25,6 @@ namespace Core
 
     }
 
-
     public sealed record TicketDescription
     {
         private const int MaxLength = 2000;
