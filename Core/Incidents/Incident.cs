@@ -14,13 +14,17 @@ namespace Core.Incidents
         public IncidentCategory Category { get; private set; }
         public InfrastructureEnvironment Environment { get; private set; }
         public IncidentSeverity IncidentSeverity { get; private set; }
-        public IncidentInfos IncidentInfos { get; private set; }
         public IncidentScope Scope { get; private set; }
+        public IncidentSla IncidentSla { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
+
         private Incident() { }  
+        private Incident(IncidentTitle title, IncidentDescription description, Reporter reporter, IncidentCategory category, InfrastructureEnvironment environment, IncidentSeverity incidentSeverity,  IncidentScope scope,IncidentSla sla,DateTime CreatedAt) =>
+            (Title, Description, Reporter, Category, Environment, IncidentSeverity, Scope,IncidentSla,CreatedAt,UpdatedAt) = 
+            (title,description,reporter,category,environment,incidentSeverity,scope,sla,CreatedAt,null);
 
         public static Incident Create(IncidentTitle title , IncidentDescription description , Reporter reporter , IncidentCategory category,IncidentScope scope , InfrastructureEnvironment env)
         {
@@ -28,24 +32,16 @@ namespace Core.Incidents
             if (description is null) throw new IncidentDescriptionIsNullException();
             if (reporter is null) throw new ReporterIsNullException();
             if (category is null) throw new IncidentCategoryIsNullException();
+            if (env is null) throw new IncidentInfrastructureEnvironmentIsNullException();
 
-            IncidentSeverity severity = IncidentSeverityExtension.Max([category.GetMinimalSeverityLevel(),scope.GetMinimalSeverityLevel(),env.GetMinimalSeverityLevel()]);
+            var now = DateTime.UtcNow;
 
-            return new Incident
-            {
-                Title = title,
-                Description = description,
-                Reporter = reporter,
-                Category = category,
-                Scope = scope,
-                IncidentInfos = new IncidentInfos(),
-                Environment = env,
-                IncidentSeverity = severity,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = null
+            var severity = UpdateSeverity(category, scope, env);
+            var resolutionDuration = ResolvedWithin(category, scope, env);
+            var acknowledgeDuration = AcknowledgeWithin(category, scope, env);
+            var sla = IncidentSla.Create(IncidentDeadline.Create(acknowledgeDuration,now.Add(acknowledgeDuration)),IncidentDeadline.Create(resolutionDuration,now.Add(resolutionDuration)));
 
-            };
-
+            return new Incident(title,description,reporter,category,env,severity,scope,sla,now);
         }
         public void ChangeTitle(IncidentTitle title)
         {
@@ -57,6 +53,25 @@ namespace Core.Incidents
             if (Description == null) throw new IncidentDescriptionIsNullException();
             Description = description;
         }
+        public void ChangeScope(IncidentScope scope)
+        {
+            if(scope == null) throw new IncidentScopeInNullException(); 
+            Scope = scope;
+            ChangeSeverity(UpdateSeverity(Category,Scope,Environment));
+            
+        }
+        public void ChangeEnvironment(InfrastructureEnvironment env)
+        {
+            if (env is null) throw new IncidentInfrastructureEnvironmentIsNullException();
+            Environment = env;
+            ChangeSeverity(UpdateSeverity(Category,Scope,Environment));
+        }
+        private void ChangeSeverity(IncidentSeverity severity) => IncidentSeverity = severity;
+        private static IncidentSeverity UpdateSeverity(IncidentCategory category , IncidentScope scope , InfrastructureEnvironment environment) => 
+           IncidentSeverityExtension.Max([category.GetMinimalSeverityLevel(),scope.GetMinimalSeverityLevel(),environment.GetMinimalSeverityLevel()]);
+
+        private static TimeSpan AcknowledgeWithin( IncidentCategory category , IncidentScope scope , InfrastructureEnvironment environment) => new[] { category.GetAcknowledgeTime(), scope.GetAcknowledgeTime(), environment.GetAcknowledgeTime() }.Min();
+        private static TimeSpan ResolvedWithin( IncidentCategory category , IncidentScope scope , InfrastructureEnvironment environment) => new[] { category.GetResolutionTime(), scope.GetResolutionTime(), environment.GetResolutionTime() }.Min();
 
     }
 }
