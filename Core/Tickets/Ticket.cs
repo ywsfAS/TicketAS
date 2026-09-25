@@ -1,4 +1,5 @@
 using Core.Exceptions;
+using Core.Tickets.Conversation;
 using Core.Utilities;
 
 namespace Core
@@ -13,7 +14,7 @@ namespace Core
 
         public static TicketName Create(string ticketName)
         {
-            if(ticketName is null) throw new TicketNameIsNull();
+            if(ticketName is null) throw new TicketNameIsNullException();
             ticketName = ticketName.Trim(); 
             if(!IsValidTicketName(ticketName)) throw new TicketNameValidationException(ticketName) ;
 
@@ -32,7 +33,7 @@ namespace Core
         private TicketDescription(string description) => this.Description = description;
         public static TicketDescription Create(string description)
         {
-            if(description is null) throw new TicketDescriptionIsNull();
+            if(description is null) throw new TicketDescriptionIsNullException();
             description = description.Trim();
             if(!IsValidTicketDescription(description)) throw new TicketDescriptionValidationException(description);
             return new TicketDescription(description);
@@ -60,8 +61,9 @@ namespace Core
 
         public TicketCategory Category { get; private set; }
 
+        public Conversation Conversation { get; private set; }
+
         public DateTime CreatedAt;
-        public DateTime? UpdatedAt;
         
     }
 }
