@@ -16,6 +16,14 @@ namespace Core.Exceptions
             this.description = description;
         }
     }
-    public sealed class TicketNameIsNull() : DomainException("Ticket Name was null");
-    public sealed class TicketDescriptionIsNull() : DomainException("Ticket Description was null");
+    public sealed class TicketNameIsNullException() : DomainException("Ticket Name cannot null");
+    public sealed class TicketDescriptionIsNullException() : DomainException("Ticket Description cannot null");
+    public sealed class TicketMessageIsNullException() : DomainException("Ticket message cannot null");
+    public sealed class TicketMessageTitleIsNullException() : DomainException("Ticket message title cannot be null");
+    public sealed class TicketMessageTitleInvalidException(string title) : DomainException($"Ticket message title is invalid : {title}");
+    public sealed class TicketMessageBodyIsNullException() : DomainException("Ticket message body cannot be null");
+    public sealed class TicketMessageBodyInvalidException(string body) : DomainException($"Ticket message body is invalid : {body}");
+    public sealed class TicketMessageContentIsNullException() : DomainException("Ticket content cannot be null");
+    public sealed class TicketConversationReporterIsNullException() : DomainException("Ticket Report cannot be null in a conversation");
+    public sealed class TicketConversationAgentIsNullException() : DomainException("Ticket Agent cannot be null in a conversation");
 }

@@ -37,9 +37,7 @@ namespace Core.Incidents
             var now = DateTime.UtcNow;
 
             var severity = UpdateSeverity(category, scope, env);
-            var resolutionDuration = ResolvedWithin(category, scope, env);
-            var acknowledgeDuration = AcknowledgeWithin(category, scope, env);
-            var sla = IncidentSla.Create(IncidentDeadline.Create(acknowledgeDuration,now.Add(acknowledgeDuration)),IncidentDeadline.Create(resolutionDuration,now.Add(resolutionDuration)));
+            var sla = UpdateIncidentSla(category, scope, env, now);
 
             return new Incident(title,description,reporter,category,env,severity,scope,sla,now);
         }
@@ -58,6 +56,7 @@ namespace Core.Incidents
             if(scope == null) throw new IncidentScopeInNullException(); 
             Scope = scope;
             ChangeSeverity(UpdateSeverity(Category,Scope,Environment));
+            ChangeIncidentSla(UpdateIncidentSla(Category,Scope,Environment,DateTime.UtcNow));
             
         }
         public void ChangeEnvironment(InfrastructureEnvironment env)
@@ -65,7 +64,16 @@ namespace Core.Incidents
             if (env is null) throw new IncidentInfrastructureEnvironmentIsNullException();
             Environment = env;
             ChangeSeverity(UpdateSeverity(Category,Scope,Environment));
+            ChangeIncidentSla(UpdateIncidentSla(Category,Scope,Environment,DateTime.UtcNow));
         }
+        private static IncidentSla UpdateIncidentSla(IncidentCategory category , IncidentScope scope , InfrastructureEnvironment env , DateTime now)
+        {
+            var resolutionDuration = ResolvedWithin(category, scope, env);
+            var acknowledgeDuration = AcknowledgeWithin(category, scope, env);
+            return IncidentSla.Create(IncidentDeadline.Create(acknowledgeDuration,now.Add(acknowledgeDuration)),IncidentDeadline.Create(resolutionDuration,now.Add(resolutionDuration)));
+
+        }
+        private void ChangeIncidentSla(IncidentSla incidentSla) => IncidentSla = incidentSla;
         private void ChangeSeverity(IncidentSeverity severity) => IncidentSeverity = severity;
         private static IncidentSeverity UpdateSeverity(IncidentCategory category , IncidentScope scope , InfrastructureEnvironment environment) => 
            IncidentSeverityExtension.Max([category.GetMinimalSeverityLevel(),scope.GetMinimalSeverityLevel(),environment.GetMinimalSeverityLevel()]);
