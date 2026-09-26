@@ -1,5 +1,5 @@
 
-namespace Core.Reportes.ReportStates
+namespace Core.Reporters.ReportStates
 {
     public sealed class ActiveReporterState : ReporterState
     {

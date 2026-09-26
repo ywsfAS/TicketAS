@@ -1,58 +1,17 @@
+using Core.Agents;
 using Core.Exceptions;
 using Core.Incidents;
-using Core.Reportes;
+using Core.Reporters;
 using Core.Tickets;
 using Core.Tickets.Conversation;
+using Core.Tickets.TicketPriotities;
 using Core.Utilities;
 
 namespace Core
 {
     public sealed record TicketId(Guid Value) : StrongTypedId(Value);
 
-    public abstract class TicketPriority { 
-        public abstract int Level { get;}
-        public abstract bool AllowsUnassigned();
-        public abstract bool AllowsWaitInQueue();
-        public abstract bool RequiresAssignment();
-        public abstract bool RequiresImmediateAssignment();
-    }
-    public sealed class CriticalTicket : TicketPriority {
-        public override int Level { get; } = 3;
 
-        public override bool RequiresImmediateAssignment() => true;
-        public override bool RequiresAssignment() => true;
-        public override bool AllowsUnassigned() => false;
-        public override bool AllowsWaitInQueue() => false;
-    }
-
-    public sealed class HighTicket : TicketPriority
-    {
-        public override int Level { get; } = 2;
-
-        public override bool RequiresImmediateAssignment() => false;
-        public override bool RequiresAssignment() => true;
-        public override bool AllowsUnassigned() => false;
-        public override bool AllowsWaitInQueue() => false;
-
-    }
-    public sealed class NormalTicket : TicketPriority {
-
-        public override int Level { get; } = 1;
-        public override bool RequiresImmediateAssignment() => false;
-        public override bool RequiresAssignment() => false;
-        public override bool AllowsUnassigned() => true;
-        public override bool AllowsWaitInQueue() => false;
-    
-    }
-    public sealed class LowTicket : TicketPriority { 
-        public override int Level {get;} = 0;
-        public override bool RequiresImmediateAssignment() => false;
-        public override bool RequiresAssignment() => true;
-        public override bool AllowsUnassigned() => true;
-        public override bool AllowsWaitInQueue() => true;
-
-    
-    }
 
     public sealed class Ticket : Entity<TicketId>
     {

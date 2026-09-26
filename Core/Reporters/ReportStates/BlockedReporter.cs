@@ -1,8 +1,11 @@
-namespace Core.Reportes.ReportStates
+using System;
+using System.Collections.Generic;
+
+namespace Core.Reporters.ReportStates
 {
-    public sealed class SuspendedReporterState : ReporterState
+    public sealed class BlockedReporterState : ReporterState
     {
-        public override string Name { get; } = "Suspended";
+        public override string Name { get; } = "Blocked";
         public override bool EnsureCanReport() => false;
 
         public override bool EnsureCanSendMessage() => false;

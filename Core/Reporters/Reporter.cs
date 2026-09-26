@@ -1,11 +1,11 @@
 using Core.Exceptions;
 using Core.Incidents;
-using Core.Reportes.ReportStates;
+using Core.Reporters.ReportStates;
 using Core.Tickets.Messages;
 using Core.Users;
 using Core.Utilities;
 
-namespace Core.Reportes
+namespace Core.Reporters
 {
     public sealed record ReporterId(Guid Id) : ConversationParticipantId(Id);
     public class Reporter : Entity<ReporterId>

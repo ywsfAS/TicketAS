@@ -1,4 +1,4 @@
-namespace Core.Reportes.ReportStates
+namespace Core.Reporters.ReportStates
 {
     public abstract class ReporterState
     {
