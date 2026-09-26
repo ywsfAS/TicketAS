@@ -1,69 +1,87 @@
 using Core.Exceptions;
+using Core.Incidents;
+using Core.Tickets;
 using Core.Tickets.Conversation;
 using Core.Utilities;
 
 namespace Core
 {
     public sealed record TicketId(Guid Value) : StrongTypedId(Value);
-    public sealed record TicketName
-    {
-        private const int MaxLength = 100; 
-        public string Name { get;}
 
-        private TicketName(string name) => this.Name = name;
+    public abstract class TicketPriority { 
+        public abstract int Level { get;}
+        public abstract bool AllowsUnassigned();
+        public abstract bool AllowsWaitInQueue();
+        public abstract bool RequiresAssignment();
+        public abstract bool RequiresImmediateAssignment();
+    }
+    public sealed class CriticalTicket : TicketPriority {
+        public override int Level { get; } = 3;
 
-        public static TicketName Create(string ticketName)
-        {
-            if(ticketName is null) throw new TicketNameIsNullException();
-            ticketName = ticketName.Trim(); 
-            if(!IsValidTicketName(ticketName)) throw new TicketNameValidationException(ticketName) ;
-
-            return new TicketName(ticketName);
-        }
-        private static bool IsValidTicketName(string ticketName) =>
-             !String.IsNullOrEmpty(ticketName) && ticketName.Length <= MaxLength;
-        public int Length => Name.Length;
-
+        public override bool RequiresImmediateAssignment() => true;
+        public override bool RequiresAssignment() => true;
+        public override bool AllowsUnassigned() => false;
+        public override bool AllowsWaitInQueue() => false;
     }
 
-    public sealed record TicketDescription
+    public sealed class HighTicket : TicketPriority
     {
-        private const int MaxLength = 2000;
-        public string Description { get;}
-        private TicketDescription(string description) => this.Description = description;
-        public static TicketDescription Create(string description)
-        {
-            if(description is null) throw new TicketDescriptionIsNullException();
-            description = description.Trim();
-            if(!IsValidTicketDescription(description)) throw new TicketDescriptionValidationException(description);
-            return new TicketDescription(description);
-        }
+        public override int Level { get; } = 2;
 
-        private static bool IsValidTicketDescription(string ticketDescription) => 
-           !String.IsNullOrEmpty(ticketDescription) &&  ticketDescription.Length <= MaxLength;
-
-        public int Length => this.Description.Length;
-
-        public static explicit operator string(TicketDescription ticketDescription) => ticketDescription.Description;
+        public override bool RequiresImmediateAssignment() => false;
+        public override bool RequiresAssignment() => true;
+        public override bool AllowsUnassigned() => false;
+        public override bool AllowsWaitInQueue() => false;
 
     }
-    public abstract class TicketPriority { }
-    public sealed class CriticalTicket : TicketPriority { }
-    public sealed class NormalTicket : TicketPriority { }
-    public sealed class LowTicket : TicketPriority { }
+    public sealed class NormalTicket : TicketPriority {
+
+        public override int Level { get; } = 1;
+        public override bool RequiresImmediateAssignment() => false;
+        public override bool RequiresAssignment() => false;
+        public override bool AllowsUnassigned() => true;
+        public override bool AllowsWaitInQueue() => false;
+    
+    }
+    public sealed class LowTicket : TicketPriority { 
+        public override int Level {get;} = 0;
+        public override bool RequiresImmediateAssignment() => false;
+        public override bool RequiresAssignment() => true;
+        public override bool AllowsUnassigned() => true;
+        public override bool AllowsWaitInQueue() => true;
+
+    
+    }
 
     public sealed class Ticket : Entity<TicketId>
     {
-        public TicketName Name { get; private set; }
+        public TicketTitle Name { get; private set; }
         public TicketDescription Description { get; private set; }
         public Reporter Reporter { get; private set; }
+        public Agent Agent { get; private set; }
+        public Incident Incident { get; private set; }
         public TicketPriority Priority { get; private set; }
-
-        public TicketCategory Category { get; private set; }
-
         public Conversation Conversation { get; private set; }
 
-        public DateTime CreatedAt;
-        
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
+
+        private Ticket(TicketTitle name, TicketDescription description, Reporter reporter,Agent agent,Incident incident,TicketPriority priority,Conversation conversation, DateTime createdAt, DateTime? updatedAt) =>
+            (Name,Description,Reporter,Agent,Incident,Priority,Conversation,CreatedAt,UpdatedAt) 
+            = (name, description, reporter, agent,incident, priority, conversation, createdAt, updatedAt);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

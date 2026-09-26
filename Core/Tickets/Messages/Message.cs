@@ -1,20 +1,21 @@
 using Core.Utilities;
 using Core.Exceptions;
-
 namespace Core.Tickets.Messages
 {
     public sealed record MessageId(Guid Id) : StrongTypedId(Id);
+    public abstract record ConversationParticipantId(Guid Id) : StrongTypedId(Id);
     public sealed class Message : Entity<MessageId>
     {
+        public ConversationParticipantId ParticipantId { get; private set; }
         public MessageContent Content { get; private set; }
         public DateTime SentAt { get; private set; }
 
-        private Message(MessageContent content , DateTime sentAt) => 
-            (Content, SentAt) = (content,sentAt);
-        public static Message Create(MessageContent content , DateTime sentAt)
+        private Message(ConversationParticipantId id,MessageContent content , DateTime sentAt) => 
+            (ParticipantId,Content, SentAt) = (id, content, sentAt);
+        public static Message Create(ConversationParticipantId id,MessageContent content , DateTime sentAt)
         {
             if (content == null) throw new TicketMessageContentIsNullException();
-            return new Message(content, sentAt);
+            return new Message(id,content, sentAt);
         }
 
 
