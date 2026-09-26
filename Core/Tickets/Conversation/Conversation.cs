@@ -9,7 +9,9 @@ namespace Core.Tickets.Conversation
     public sealed class Conversation : Entity<ConversationId>
     {
         public Reporter Reporter { get; private set; }
-        public Agent Agent { get; private set; }
+
+        private readonly HashSet<AgentId> _agentIds = new();
+        public IReadOnlyCollection<AgentId> AgentsIds => _agentIds;
 
         private List<Message> _messages = new List<Message>();
         public IReadOnlyList<Message> Messages => _messages.AsReadOnly();
@@ -17,21 +19,31 @@ namespace Core.Tickets.Conversation
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
-        private Conversation(Reporter reporter, Agent agent,DateTime createdAt , DateTime? updatedAt) =>
-            (Reporter, Agent,CreatedAt,UpdatedAt) = (reporter, agent,createdAt,updatedAt);
-        public static Conversation Create(Reporter reporter , Agent agent)
+        private Conversation(Reporter reporter,DateTime createdAt , DateTime? updatedAt) =>
+            (Reporter,CreatedAt,UpdatedAt) = (reporter, createdAt, updatedAt);
+        public static Conversation Create(Reporter reporter,Agent intialAgent)
         {
             if(reporter == null) throw new TicketConversationReporterIsNullException();
-            if(agent == null) throw new TicketConversationAgentIsNullException();
 
-            return new Conversation(reporter,agent,DateTime.UtcNow,null);
+            var conversation = new Conversation(reporter,DateTime.UtcNow,null);
+            conversation._agentIds.Add(intialAgent.Id);
+            return conversation;
         }
-        public void AgentSends(MessageContent content)
+        internal void AddParticipant(Agent agent)
+        {
+            if (agent is null) throw new TicketConversationAgentIsNullException();
+            _agentIds.Add(agent.Id);
+
+            Update();
+        }
+        public void AgentSends(Agent agent,MessageContent content)
         {
             if(content == null) throw new TicketMessageContentIsNullException();
-            var message = Message.Create(Agent.Id,content,DateTime.UtcNow);
+            if(!_agentIds.Contains(agent.Id)) throw new TicketConversationAgentNotParticipantException();
+            var message = Message.Create(agent.Id,content,DateTime.UtcNow);
 
             this._messages.Add(message);
+            Update();
         }
         public void ReporterSends(MessageContent content)
         {
@@ -39,6 +51,11 @@ namespace Core.Tickets.Conversation
             var message = Message.Create(Reporter.Id,content,DateTime.UtcNow);
 
             this._messages.Add(message);
+
+            Update();
         }
+        private void Update() => UpdatedAt = DateTime.UtcNow;   
     }
+
+
 }

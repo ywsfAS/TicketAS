@@ -32,4 +32,5 @@ namespace Core.Exceptions
     public sealed class TicketAgentIsNotQualifiedForIncident() : DomainException("Ticket's agent is not qualified for incident");
     public sealed class TicketInvalidActionWithinLifecycleException(string action , string lifecycleName) : DomainException( $"Cannot {action} while ticket is {lifecycleName}.");
     public sealed class TicketLifecyleIsNullException() : DomainException("Ticket's lifecycle cannot be null");
+    public sealed class TicketConversationAgentNotParticipantException() : DomainException("Ticket agent is not a participant in the conversation");
 }

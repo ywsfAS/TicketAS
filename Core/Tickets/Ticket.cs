@@ -64,16 +64,6 @@ namespace Core
             Update();
 
         }
-        public void ReporterSends(MessageContent content)
-        {
-            Conversation.ReporterSends(content);
-            Update();
-        }
-        public void AgentSends(MessageContent content)
-        {
-            Conversation.AgentSends(content);
-            Update();
-        }
 
         internal void SetLifecycle(TicketLifecycle lifecycle)
         {
@@ -83,15 +73,31 @@ namespace Core
             Update();
 
         }
+        public void StartWork() => Lifecycle.StartWork(this);
+        public void Resolve() => Lifecycle.Resolve(this);
+        public void Close() => Lifecycle.Close(this);
+        public void Reopen() => Lifecycle.Reopen(this);
+        public void AssignAgent(Agent agent) => Lifecycle.AssignAgent(this, agent);
+        public void ChangePriority(TicketPriority priority) => Lifecycle.ChangePriority(this,priority);
+        public void ReporterSends(MessageContent content) => Lifecycle.ReporterSends(this,content);
+        public void AgentSends(MessageContent constent) => Lifecycle.AgentSends(this,constent);
 
+        public void ChangeTitle(TicketTitle title)
+        {
+            if(title == null) throw new TicketTitleIsNullException();
 
+            Title = title;
+            Update();
 
+        }
+        public void ChangeDescription(TicketDescription description)
+        {
+            if(description == null) throw new TicketDescriptionIsNullException();
+            Description = description;
 
+            Update();
 
-
-
-
-
+        }
 
 
 

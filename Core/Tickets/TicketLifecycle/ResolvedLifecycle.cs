@@ -11,7 +11,7 @@ namespace Core.Tickets.TicketLifecycle
 
         public override void ReporterSends(Ticket ticket, MessageContent content)
         {
-            ticket.ReporterSends(content);
+            ticket.Conversation.ReporterSends(content);
             ticket.SetLifecycle(InProgress);
 
             ticket.Update();
@@ -19,7 +19,7 @@ namespace Core.Tickets.TicketLifecycle
 
         public override void AgentSends(Ticket ticket, MessageContent content)
         {
-            ticket.Conversation.AgentSends(content);
+            ticket.Conversation.AgentSends(ticket.Agent, content);
             ticket.Update();
         }
     }
