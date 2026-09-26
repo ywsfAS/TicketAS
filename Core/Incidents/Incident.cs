@@ -3,6 +3,7 @@ using Core.Incidents.Categories;
 using Core.Incidents.Environments;
 using Core.Incidents.Scope;
 using Core.Incidents.Severity;
+using Core.Reportes;
 using Core.Utilities;
 namespace Core.Incidents
 {

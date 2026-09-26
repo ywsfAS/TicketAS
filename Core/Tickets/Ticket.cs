@@ -1,5 +1,6 @@
 using Core.Exceptions;
 using Core.Incidents;
+using Core.Reportes;
 using Core.Tickets;
 using Core.Tickets.Conversation;
 using Core.Utilities;

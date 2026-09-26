@@ -1,6 +1,7 @@
 using Core.Tickets.Messages;
 using Core.Utilities;
 using Core.Exceptions;
+using Core.Reportes;
 namespace Core.Tickets.Conversation
 {
     public sealed record ConversationId(Guid Id) : StrongTypedId(Id);
