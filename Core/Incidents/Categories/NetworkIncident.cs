@@ -1,14 +1,22 @@
-
+using Core.Agents;
+using Core.Agents.Seniority;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Incidents.Severity;
 
 namespace Core.Incidents.Categories
 {
-    public sealed class NetworkIncident : IncidentCategory
+    public sealed record NetworkIncident : IncidentCategory
     {
         public NetworkSymptomType Symptom { get; private set; }
-        private NetworkIncident(NetworkSymptomType symptom) => Symptom = symptom;
-        public static NetworkIncident Create(NetworkSymptomType symptom) => new NetworkIncident(symptom);
+        private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations) : base(rule,seniority,specializations) => Symptom = symptom;
+        public static NetworkIncident Create(NetworkSymptomType symptom,SpecializationMatchRule rule, AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations)
+        {
+            if (seniority == null) throw new IncidentCategorySeniorityIsNullException();
+            if (specializations == null) throw new IncidentCategorySpecializationIsNullException();
+            
+            return new NetworkIncident(symptom,rule,seniority,specializations);
+        }
         public override IncidentSeverity GetMinimalSeverityLevel()
         {
             return Symptom switch

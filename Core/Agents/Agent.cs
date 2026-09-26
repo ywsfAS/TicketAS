@@ -4,6 +4,7 @@ using Core.Tickets.Messages;
 using Core.Users;
 using Core.Utilities;
 using Core.Exceptions;
+using Core.Agents.Seniority;
 
 namespace Core.Agents
 {
@@ -11,6 +12,10 @@ namespace Core.Agents
     public class Agent : Entity<AgentId>
     {
         public User User { get; private set; }
+        public AgentSeniority Seniority { get; private set; }
+
+        private HashSet<AgentSpecialization> _agentSpecializations = new();
+        public IReadOnlyCollection<AgentSpecialization> Specializations => _agentSpecializations;
 
         public AgentState State { get; private set; }
         private readonly List<Incident> _incidents = new List<Incident>();
@@ -30,6 +35,12 @@ namespace Core.Agents
             return new Agent(user, state, DateTime.UtcNow, null);
 
         }
+        public bool HasSpecialization(AgentSpecialization specialization) => _agentSpecializations.Contains(specialization);
+        public void AddSpecialization(AgentSpecialization specialization) => _agentSpecializations.Add(specialization);
+        public void RemoveSpecialization(AgentSpecialization specialization) => _agentSpecializations.Remove(specialization);
+
+        public bool MeetsSeniority(AgentSeniority seniority) => Seniority.Meets(seniority);
+
         public void AssignIncident(Incident incident)
         {
             State.EnsureCanReceiveAssignment();
