@@ -1,5 +1,6 @@
 namespace Core.Exceptions
 {
+    public sealed class IncidentIsNullException() : DomainException("Incident cannot be null");
     public sealed class IncidentTitleException(string message) : DomainException(message); 
     public sealed class IncidentDescriptionException(string message) : DomainException(message);
     public sealed class IncidentTitleIsNullException() : DomainException("Incident title cannot be null");

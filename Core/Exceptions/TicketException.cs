@@ -1,3 +1,4 @@
+
 namespace Core.Exceptions
 {
     public sealed class TicketNameValidationException : DomainException
@@ -16,7 +17,7 @@ namespace Core.Exceptions
             this.description = description;
         }
     }
-    public sealed class TicketNameIsNullException() : DomainException("Ticket Name cannot null");
+    public sealed class TicketTitleIsNullException() : DomainException("Ticket Name cannot null");
     public sealed class TicketDescriptionIsNullException() : DomainException("Ticket Description cannot null");
     public sealed class TicketMessageIsNullException() : DomainException("Ticket message cannot null");
     public sealed class TicketMessageTitleIsNullException() : DomainException("Ticket message title cannot be null");
@@ -26,4 +27,9 @@ namespace Core.Exceptions
     public sealed class TicketMessageContentIsNullException() : DomainException("Ticket content cannot be null");
     public sealed class TicketConversationReporterIsNullException() : DomainException("Ticket Report cannot be null in a conversation");
     public sealed class TicketConversationAgentIsNullException() : DomainException("Ticket Agent cannot be null in a conversation");
+    public sealed class TicketPriorityIsNullException() : DomainException("Ticket priority cannot be null");
+    public sealed class TicketConversationIsNullException() : DomainException("Ticket conversation cannot be null");
+    public sealed class TicketAgentIsNotQualifiedForIncident() : DomainException("Ticket's agent is not qualified for incident");
+    public sealed class TicketInvalidActionWithinLifecycleException(string action , string lifecycleName) : DomainException( $"Cannot {action} while ticket is {lifecycleName}.");
+    public sealed class TicketLifecyleIsNullException() : DomainException("Ticket's lifecycle cannot be null");
 }

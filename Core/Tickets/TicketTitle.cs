@@ -11,7 +11,7 @@ namespace Core.Tickets
 
         public static TicketTitle Create(string ticketName)
         {
-            if(ticketName is null) throw new TicketNameIsNullException();
+            if(ticketName is null) throw new TicketTitleIsNullException();
             ticketName = ticketName.Trim(); 
             if(!IsValidTicketName(ticketName)) throw new TicketNameValidationException(ticketName) ;
 
