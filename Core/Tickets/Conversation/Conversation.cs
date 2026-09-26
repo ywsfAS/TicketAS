@@ -39,6 +39,7 @@ namespace Core.Tickets.Conversation
         public void AgentSends(Agent agent,MessageContent content)
         {
             if(content == null) throw new TicketMessageContentIsNullException();
+            if (agent == null) throw new AgentIsNullException();
             if(!_agentIds.Contains(agent.Id)) throw new TicketConversationAgentNotParticipantException();
             var message = Message.Create(agent.Id,content,DateTime.UtcNow);
 

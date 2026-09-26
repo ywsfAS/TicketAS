@@ -29,7 +29,7 @@ namespace Core.Reporters
         }
         public void ReportIncident(Incident incident)
         {
-            State.EnsureCanReport();
+            if(!State.EnsureCanReport()) throw new ReporterInvalidActionForStateException();
 
             _Incidents.Add(incident);
             Update();

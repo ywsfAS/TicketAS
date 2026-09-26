@@ -44,12 +44,12 @@ namespace Core.Incidents
         }
         public void ChangeTitle(IncidentTitle title)
         {
-            if (Title == null) throw new IncidentTitleIsNullException();
+            if (title == null) throw new IncidentTitleIsNullException();
             Title = title;
         }
         public void ChangeDescription(IncidentDescription description)
         {
-            if (Description == null) throw new IncidentDescriptionIsNullException();
+            if (description == null) throw new IncidentDescriptionIsNullException();
             Description = description;
         }
         public void ChangeScope(IncidentScope scope)

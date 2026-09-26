@@ -13,8 +13,8 @@ namespace Core.Incidents.Categories
         public abstract TimeSpan GetAcknowledgeTime();
         public abstract TimeSpan GetResolutionTime();
 
-        public IncidentCategory(SpecializationMatchRule rule,AgentSeniority requiredSeniority, IReadOnlyCollection<AgentSpecialization> rquiredSpecializations) =>
-            (SpecializationMatchRule,RequiredSeniority,RequiredSpecializations) = (rule,requiredSeniority,RequiredSpecializations);
+        public IncidentCategory(SpecializationMatchRule rule,AgentSeniority requiredSeniority, IReadOnlyCollection<AgentSpecialization> requiredSpecializations) =>
+            (SpecializationMatchRule,RequiredSeniority,RequiredSpecializations) = (rule,requiredSeniority,requiredSpecializations);
 
         public bool IsQualified(Agent agent)
         {

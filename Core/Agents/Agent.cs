@@ -24,15 +24,16 @@ namespace Core.Agents
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
-        private Agent(User user, AgentState state, DateTime createdAt, DateTime? updatedAt) =>
-            (User,State,CreatedAt,UpdatedAt) = (user,state,createdAt,updatedAt);
+        private Agent(User user, AgentState state,AgentSeniority seniority, DateTime createdAt, DateTime? updatedAt) =>
+            (User,State,Seniority,CreatedAt,UpdatedAt) = (user, state, seniority, createdAt, updatedAt);
 
-        public static Agent Create(User user, AgentState state)
+        public static Agent Create(User user, AgentState state , AgentSeniority seniority)
         {
             if(user is null) throw new UserIsNullException();
-            if(state is null) throw new AgentStateIsNullException(); 
+            if(state is null) throw new AgentStateIsNullException();
+            if (seniority is null) throw new AgentSeniorityIsNullException();
 
-            return new Agent(user, state, DateTime.UtcNow, null);
+            return new Agent(user, state, seniority,DateTime.UtcNow, null);
 
         }
         public bool HasSpecialization(AgentSpecialization specialization) => _agentSpecializations.Contains(specialization);
@@ -43,7 +44,7 @@ namespace Core.Agents
 
         public void AssignIncident(Incident incident)
         {
-            State.EnsureCanReceiveAssignment();
+            if (!State.EnsureCanReceiveAssignment()) throw new AgentInvalidActionForStateException();
 
             _incidents.Add(incident);
             Update();

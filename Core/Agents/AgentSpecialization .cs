@@ -10,7 +10,7 @@ namespace Core.Agents
 
         public string Name { get; private set; }
 
-        public AgentSpecialization(string name) => Name = name;
+        private AgentSpecialization(string name) => Name = name;
 
         public static AgentSpecialization? FindByName(string name) =>
             All.FirstOrDefault((n) => n.Name == name);

@@ -9,7 +9,11 @@ namespace Core.Tickets.TicketLifecycle
         public override string Name => "InProgress";
 
         public override void Resolve(Ticket ticket) => ticket.SetLifecycle(Resolved);
-        public override void AssignAgent(Ticket ticket, Agent agent) => ticket.SetAgent(agent);
+        public override void AssignAgent(Ticket ticket, Agent agent)
+        {
+            ticket.SetAgent(agent);
+            ticket.Conversation.AddParticipant(agent);
+        }
         public override void ChangePriority(Ticket ticket, TicketPriority priority) => ticket.SetPriority(priority);
         public override void ReporterSends(Ticket ticket, MessageContent content)
         {
