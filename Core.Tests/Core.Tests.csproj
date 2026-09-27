@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Agents\" />
-    <Folder Include="Incidents\" />
     <Folder Include="Reporters\" />
     <Folder Include="Tickets\" />
   </ItemGroup>

@@ -13,6 +13,7 @@ namespace Core.Incidents
         private IncidentDescription(string description) => Description = description;
         public static IncidentDescription Create(string description)
         {
+            if(description == null) throw new IncidentDescriptionIsNullException();
             description = description.Trim();
             if (!IsValidDescription(description)) throw new IncidentDescriptionException($"invalid incident description : {description}");
 
@@ -20,6 +21,7 @@ namespace Core.Incidents
         }
         public static IncidentDescription Create(IEnumerable<string> segments)
         {
+            if(segments == null) throw new IncidentDescriptionIsNullException();
             var description = string.Join(" ", segments).Trim();
             if (!IsValidDescription(description)) throw new IncidentDescriptionException($"invalid incident description : {description}");
 

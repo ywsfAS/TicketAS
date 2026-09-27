@@ -4,6 +4,8 @@ namespace Core.Exceptions
     public sealed class IncidentTitleException(string message) : DomainException(message); 
     public sealed class IncidentDescriptionException(string message) : DomainException(message);
     public sealed class IncidentTitleIsNullException() : DomainException("Incident title cannot be null");
+    public sealed class IncidentTitleProblemIsNullException() : DomainException("Incident title's problem cannot be null");
+    public sealed class IncidentTitleServiceIsNullException() : DomainException("Incident title's service cannot be null");
     public sealed class IncidentTitleProblemIsInvalidException(string problem) : DomainException($"Incident title problem is invalid : {problem}");
     public sealed class IncidentTitleServiceIsInvalidException(string service) : DomainException($"Incident title service is invalid : {service}");
     public sealed class IncidentDescriptionIsNullException() : DomainException("Incident description cannot be null");
@@ -14,4 +16,5 @@ namespace Core.Exceptions
     public sealed class IncidentInfrastructureEnvironmentIsNullException() : DomainException("Incident Environment cannot be null");
     public sealed class IncidentCategorySeniorityIsNullException() : DomainException("Incident Category seniority cannot be null");
     public sealed class IncidentCategorySpecializationIsNullException() : DomainException("Incident specialization seniority cannot be null");
+    
 }

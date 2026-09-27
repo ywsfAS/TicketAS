@@ -22,6 +22,8 @@ namespace Core.Incidents
         private IncidentTitle(string problem, string service) => (Problem, AffectedService) = (problem, service);
         public static IncidentTitle Create(string problem, string service)
         {
+            if (problem == null) throw new IncidentTitleProblemIsNullException();
+            if (service == null) throw new IncidentTitleServiceIsNullException();
             problem = problem.Trim();
             service = service.Trim();
             if (!IsValidProblem(problem)) throw new IncidentTitleProblemIsInvalidException(problem);
@@ -31,6 +33,7 @@ namespace Core.Incidents
         }
         public static IncidentTitle Create(string title)
         {
+            if (title == null) throw new IncidentTitleIsNullException();
             var (problem, service) = SplitTitle(title);
 
             problem = problem.Trim();
