@@ -13,6 +13,7 @@ namespace Core.Exceptions
     public sealed class IncidentScopeInNullException() : DomainException("Incident Scop cannot be null");
     public sealed class IncidentDeadlineInvalidDurationException(TimeSpan duration) : DomainException($"SlaDeadline duration cannot be empty {duration} ");
     public sealed class IncidentSlaDeadlineIsNullException() : DomainException("IncidentDeadline cannot be null");
+    public sealed class IncidentSlaInvalidDeadlinesException(string message) : DomainException(message);
     public sealed class IncidentInfrastructureEnvironmentIsNullException() : DomainException("Incident Environment cannot be null");
     public sealed class IncidentCategorySeniorityIsNullException() : DomainException("Incident Category seniority cannot be null");
     public sealed class IncidentCategorySpecializationIsNullException() : DomainException("Incident specialization seniority cannot be null");

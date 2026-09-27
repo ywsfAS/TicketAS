@@ -38,7 +38,7 @@ namespace Core.Incidents
             var now = DateTime.UtcNow;
 
             var severity = UpdateSeverity(category, scope, env);
-            var sla = UpdateIncidentSla(category, scope, env, now);
+            var sla = UpdateIncidentSla(category, scope, env);
 
             return new Incident(title,description,reporter,category,env,severity,scope,sla,now);
         }
@@ -57,7 +57,7 @@ namespace Core.Incidents
             if(scope == null) throw new IncidentScopeInNullException(); 
             Scope = scope;
             ChangeSeverity(UpdateSeverity(Category,Scope,Environment));
-            ChangeIncidentSla(UpdateIncidentSla(Category,Scope,Environment,DateTime.UtcNow));
+            ChangeIncidentSla(UpdateIncidentSla(Category,Scope,Environment));
             
         }
         public void ChangeEnvironment(InfrastructureEnvironment env)
@@ -65,13 +65,13 @@ namespace Core.Incidents
             if (env is null) throw new IncidentInfrastructureEnvironmentIsNullException();
             Environment = env;
             ChangeSeverity(UpdateSeverity(Category,Scope,Environment));
-            ChangeIncidentSla(UpdateIncidentSla(Category,Scope,Environment,DateTime.UtcNow));
+            ChangeIncidentSla(UpdateIncidentSla(Category,Scope,Environment));
         }
-        private static IncidentSla UpdateIncidentSla(IncidentCategory category , IncidentScope scope , InfrastructureEnvironment env , DateTime now)
+        private static IncidentSla UpdateIncidentSla(IncidentCategory category , IncidentScope scope , InfrastructureEnvironment env)
         {
             var resolutionDuration = ResolvedWithin(category, scope, env);
             var acknowledgeDuration = AcknowledgeWithin(category, scope, env);
-            return IncidentSla.Create(IncidentDeadline.Create(acknowledgeDuration,now.Add(acknowledgeDuration)),IncidentDeadline.Create(resolutionDuration,now.Add(resolutionDuration)));
+            return IncidentSla.Create(IncidentDeadline.Create(acknowledgeDuration),IncidentDeadline.Create(resolutionDuration));
 
         }
         private void ChangeIncidentSla(IncidentSla incidentSla) => IncidentSla = incidentSla;

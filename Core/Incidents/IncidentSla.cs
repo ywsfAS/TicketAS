@@ -8,11 +8,12 @@ namespace Core.Incidents
 
         private IncidentDeadline(TimeSpan duration, DateTime dueAt) => (Duration, DueAt) = (duration, dueAt);
 
-        public static IncidentDeadline Create(TimeSpan duration , DateTime dueAt)
+        public static IncidentDeadline Create(TimeSpan duration)
         {
             if(duration <= TimeSpan.Zero) throw new IncidentDeadlineInvalidDurationException(duration);
+            var dueAt = DateTime.UtcNow.Add(duration);
 
-            return new IncidentDeadline(duration, dueAt);
+            return new IncidentDeadline(duration,dueAt);
 
         }
 
@@ -27,6 +28,7 @@ namespace Core.Incidents
         public static IncidentSla Create(IncidentDeadline ack , IncidentDeadline res)
         {
             if (ack == null || res == null) throw new IncidentSlaDeadlineIsNullException();
+            if (ack.DueAt > res.DueAt) throw new IncidentSlaInvalidDeadlinesException("Incident SLA acknowledgement deadline cannot be later than the resolution deadline."); 
 
             return new IncidentSla(ack, res);
 
