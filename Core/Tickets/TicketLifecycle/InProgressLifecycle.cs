@@ -1,4 +1,5 @@
 using Core.Agents;
+using Core.Exceptions;
 using Core.Tickets.Messages;
 using Core.Tickets.TicketPriotities;
 
@@ -17,11 +18,13 @@ namespace Core.Tickets.TicketLifecycle
         public override void ChangePriority(Ticket ticket, TicketPriority priority) => ticket.SetPriority(priority);
         public override void ReporterSends(Ticket ticket, MessageContent content)
         {
+            if (!ticket.Reporter.State.EnsureCanSendMessage()) throw new ReporterInvalidActionForStateException();
             ticket.Conversation.ReporterSends(content);
             ticket.Update();
         }
         public override void AgentSends(Ticket ticket, MessageContent content)
         {
+            if (!ticket.Agent.State.EnsureCanSendMessage()) throw new AgentInvalidActionForStateException();
             ticket.Conversation.AgentSends(ticket.Agent,content);
             ticket.Update();
         }
