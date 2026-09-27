@@ -34,6 +34,7 @@ namespace Core.Incidents
             if (reporter is null) throw new ReporterIsNullException();
             if (category is null) throw new IncidentCategoryIsNullException();
             if (env is null) throw new IncidentInfrastructureEnvironmentIsNullException();
+            if(scope is null) throw new IncidentScopeInNullException();
 
             var now = DateTime.UtcNow;
 
