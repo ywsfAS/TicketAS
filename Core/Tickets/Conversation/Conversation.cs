@@ -24,6 +24,7 @@ namespace Core.Tickets.Conversation
         public static Conversation Create(Reporter reporter,Agent intialAgent)
         {
             if(reporter == null) throw new TicketConversationReporterIsNullException();
+            if (intialAgent == null) throw new TicketConversationAgentIsNullException();
 
             var conversation = new Conversation(reporter,DateTime.UtcNow,null);
             conversation._agentIds.Add(intialAgent.Id);
@@ -39,7 +40,7 @@ namespace Core.Tickets.Conversation
         public void AgentSends(Agent agent,MessageContent content)
         {
             if(content == null) throw new TicketMessageContentIsNullException();
-            if (agent == null) throw new AgentIsNullException();
+            if (agent == null) throw new TicketConversationAgentIsNullException();
             if(!_agentIds.Contains(agent.Id)) throw new TicketConversationAgentNotParticipantException();
             var message = Message.Create(agent.Id,content,DateTime.UtcNow);
 
