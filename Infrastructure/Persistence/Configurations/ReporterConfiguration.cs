@@ -14,9 +14,11 @@ namespace Infrastructure.Persistence.Configurations
             builder.ToTable("Reporters");
 
             builder.HasKey(r => r.Id);
+
             builder.Property(r => r.Id)
                 .HasConversion(ri => ri.Id, value => new ReporterId(value))
-                .HasColumnType("uniqueidentifier");
+                .HasColumnType("uniqueidentifier")
+                .ValueGeneratedNever();
 
             builder.Property(r => r.UserId)
                 .HasConversion(

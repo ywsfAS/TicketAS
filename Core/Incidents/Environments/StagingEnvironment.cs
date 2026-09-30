@@ -5,6 +5,7 @@ namespace Core.Incidents.Environments
 {
     public sealed class StagingEnvironment : InfrastructureEnvironment
     {
+        public override string Name => "Staging";
         public override IncidentSeverity GetMinimalSeverityLevel()
             => new LowIncidentSeverity();
 

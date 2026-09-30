@@ -1,10 +1,10 @@
-
 using Core.Incidents.Severity;
 
 namespace Core.Incidents.Scope
 {
     public sealed class OrganizationScope : IncidentScope
     {
+        public override string Name => "Organization";
         public override IncidentSeverity GetMinimalSeverityLevel()
             => new CriticalIncidentSeverity();
 

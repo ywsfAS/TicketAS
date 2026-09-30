@@ -4,6 +4,7 @@ namespace Core.Incidents.Environments
 {
     public abstract class InfrastructureEnvironment 
     {
+        public abstract string Name { get; }
         public abstract IncidentSeverity GetMinimalSeverityLevel();
         public abstract TimeSpan GetAcknowledgeTime();
         public abstract TimeSpan GetResolutionTime();

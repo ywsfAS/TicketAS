@@ -4,6 +4,7 @@ namespace Core.Incidents.Environments
 {
     public sealed class ProductionEnvironment : InfrastructureEnvironment
     {
+        public override string Name => "Production";
         public override IncidentSeverity GetMinimalSeverityLevel()
             => new MeduimIncidentSeverity();
 

@@ -8,6 +8,7 @@ namespace Core.Incidents.Categories
 {
     public sealed record NetworkIncident : IncidentCategory
     {
+        public string Name => "Network";
         public NetworkSymptomType Symptom { get; private set; }
         private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations) : base(rule,seniority,specializations) => Symptom = symptom;
         public static NetworkIncident Create(NetworkSymptomType symptom,SpecializationMatchRule rule, AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations)

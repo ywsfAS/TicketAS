@@ -12,6 +12,7 @@ namespace Core.Incidents
         public IncidentTitle Title { get; private set; }
         public IncidentDescription Description { get; private set; }    
         public Reporter Reporter { get; private set; }
+        public ReporterId ReporterId { get; private set; }
         public IncidentCategory Category { get; private set; }
         public InfrastructureEnvironment Environment { get; private set; }
         public IncidentSeverity IncidentSeverity { get; private set; }

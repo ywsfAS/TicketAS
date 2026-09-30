@@ -3,9 +3,9 @@ namespace Core.Agents.Seniority
 {
     public abstract record AgentSeniority : IComparable<AgentSeniority>
     {
-        public static AgentSeniority Junior = new JuniorSeniority();
-        public static AgentSeniority Mid = new MidSeniority();
-        public static AgentSeniority Senior = new SeniorSeniority();
+        public static readonly AgentSeniority Junior = new JuniorSeniority();
+        public static readonly AgentSeniority Mid = new MidSeniority();
+        public static readonly AgentSeniority Senior = new SeniorSeniority();
 
         private static readonly AgentSeniority[] All = [Junior, Mid , Senior];
 

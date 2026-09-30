@@ -5,6 +5,8 @@ using Core.Incidents.Severity;
 namespace Core.Incidents.Categories
 {
     public abstract record IncidentCategory{
+
+        public abstract string Name { get; }
         public AgentSeniority RequiredSeniority { get; }
         public IReadOnlyCollection<AgentSpecialization> RequiredSpecializations { get; }
 

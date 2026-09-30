@@ -5,6 +5,7 @@ namespace Core.Incidents.Environments
 {
     public sealed class DevelopmentEnvironment : InfrastructureEnvironment
     {
+        public override string Name => "Development";
         public override IncidentSeverity GetMinimalSeverityLevel()
             => new LowIncidentSeverity();
 
