@@ -10,7 +10,8 @@ namespace Core.Reporters
     public sealed record ReporterId(Guid Id) : ConversationParticipantId(Id);
     public class Reporter : Entity<ReporterId>
     {
-        public User User { get; set; }
+        public User User { get; private set; }
+        public UserId UserId { get; private set; }
 
         private readonly List<Incident> _Incidents = new List<Incident>();
         public ReporterState State { get; private set; }
