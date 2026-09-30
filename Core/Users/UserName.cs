@@ -6,6 +6,7 @@ namespace Core.Users
     {
         public string Name { get; init; }
 
+        private const int MaxLength = 20;
         private const int MinLength = 2;
         private UserName() { }
         public static UserName Create(string name)
@@ -19,6 +20,6 @@ namespace Core.Users
             };
         }
         public static bool IsValidUserName(string userName) => 
-            !string.IsNullOrEmpty(userName) && userName.Length >= MinLength ;
+            !string.IsNullOrEmpty(userName) && userName.Length >= MinLength && userName.Length <= MaxLength;
     }
 }

@@ -5,6 +5,7 @@ namespace Core.Users
 {
     public sealed record Email
     {
+        private const int MaxLength = 50;
         public string Address { get; init; }
 
         private Email() { }
@@ -20,7 +21,7 @@ namespace Core.Users
             };
         }
 
-        public static bool IsValidEmail(string email) => !string.IsNullOrEmpty(email) && Regex.IsMatch(email,"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+        public static bool IsValidEmail(string email) => !string.IsNullOrEmpty(email) && email.Length <= MaxLength && Regex.IsMatch(email,"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
 
     };

@@ -8,7 +8,7 @@ namespace Core.Users
 
         private const int MinLength = 8;
 
-        private const int MaxLength = 50;
+        private const int MaxLength = 500;
 
         private UserPassword() { }
 

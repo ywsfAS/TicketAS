@@ -5,6 +5,7 @@ namespace Core.Users
 {
     public sealed record PhoneNumber
     {
+        private const int MaxLength = 16;
         public string Phone { get; init; }
         private PhoneNumber() { }
 
@@ -19,6 +20,6 @@ namespace Core.Users
             };
         }
 
-        public static bool IsValidPhoneNumber(string number) => !string.IsNullOrEmpty(number) && Regex.IsMatch(number, @"^\+?[0-9]{9,15}$");
+        public static bool IsValidPhoneNumber(string number) => !string.IsNullOrEmpty(number)&& number.Length <= MaxLength && Regex.IsMatch(number, @"^\+?[0-9]{9,15}$");
     };
 }

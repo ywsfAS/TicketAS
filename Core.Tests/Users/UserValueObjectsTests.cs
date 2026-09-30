@@ -99,7 +99,7 @@ namespace Core.Tests.Users
             [Fact]
             public void Create_WithPasswordLongerThanMax_Throws()
             {
-                var tooLong = new string('a', 51);
+                var tooLong = new string('a', 501);
 
                 Assert.Throws<UserPasswordException>(() => UserPassword.Create(tooLong));
             }
