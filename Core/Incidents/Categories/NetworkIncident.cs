@@ -6,11 +6,13 @@ using Core.Incidents.Severity;
 
 namespace Core.Incidents.Categories
 {
-    public sealed record NetworkIncident : IncidentCategory
+    public sealed class NetworkIncident : IIncidentCategoryBehavior
     {
+        public IncidentCategory Category { get; private set; }
         public string Name => "Network";
         public NetworkSymptomType Symptom { get; private set; }
-        private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations) : base(rule,seniority,specializations) => Symptom = symptom;
+        private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations) => 
+            (Category,Symptom) = (IncidentCategory.Create(rule,seniority,specializations),symptom);
         public static NetworkIncident Create(NetworkSymptomType symptom,SpecializationMatchRule rule, AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations)
         {
             if (seniority == null) throw new IncidentCategorySeniorityIsNullException();
@@ -18,7 +20,7 @@ namespace Core.Incidents.Categories
             
             return new NetworkIncident(symptom,rule,seniority,specializations);
         }
-        public override IncidentSeverity GetMinimalSeverityLevel()
+        public IncidentSeverity GetMinimalSeverityLevel()
         {
             return Symptom switch
             {
@@ -41,7 +43,7 @@ namespace Core.Incidents.Categories
             };
 
         }
-        public override TimeSpan GetAcknowledgeTime()
+        public TimeSpan GetAcknowledgeTime()
         {
             return Symptom switch
             {
@@ -64,7 +66,7 @@ namespace Core.Incidents.Categories
             };
 
         }
-        public override TimeSpan GetResolutionTime()
+        public TimeSpan GetResolutionTime()
         {
             return Symptom switch
             {

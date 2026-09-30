@@ -1,3 +1,5 @@
+using Core.Incidents.Categories;
+
 namespace Core.Agents
 {
     public sealed record AgentSpecialization 
@@ -8,7 +10,8 @@ namespace Core.Agents
 
         private static readonly AgentSpecialization[] All = [Network,Infrastructure,Database];  
 
-        public string Name { get; private set; }
+        public string Name { get;}
+        public IncidentCategoryId CategoryId { get;}
 
         private AgentSpecialization(string name) => Name = name;
 

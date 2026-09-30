@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations
 {
-    public class IndicentConfiguration : IEntityTypeConfiguration<Incident>
+    public class IncidentConfiguration : IEntityTypeConfiguration<Incident>
     {
 
         public void Configure(EntityTypeBuilder<Incident> builder)
@@ -75,12 +75,6 @@ namespace Infrastructure.Persistence.Configurations
                 )
                 .HasMaxLength(10)
                 .IsRequired();
-
-
-
-
-
-
 
             builder.Property(i => i.CreatedAt)
                 .IsRequired()
