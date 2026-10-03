@@ -10,8 +10,9 @@ namespace Core.Tickets.Conversation
     {
         public Reporter Reporter { get; private set; }
 
-        private readonly HashSet<AgentId> _agentIds = new();
-        public IReadOnlyCollection<AgentId> AgentsIds => _agentIds;
+        private readonly List<ConversationAgent> _participants = new();
+        public IReadOnlyCollection<ConversationAgent> Participants => _participants;
+        public IReadOnlyCollection<AgentId> AgentsIds => _participants.Select(p => p.AgentId).ToList();
 
         private List<Message> _messages = new List<Message>();
         public IReadOnlyList<Message> Messages => _messages.AsReadOnly();
@@ -19,44 +20,55 @@ namespace Core.Tickets.Conversation
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
-        private Conversation(Reporter reporter,DateTime createdAt , DateTime? updatedAt) =>
-            (Reporter,CreatedAt,UpdatedAt) = (reporter, createdAt, updatedAt);
-        public static Conversation Create(Reporter reporter,Agent intialAgent)
+        private Conversation() { }   // EF Core
+
+        private Conversation(Reporter reporter, DateTime createdAt, DateTime? updatedAt)
         {
-            if(reporter == null) throw new TicketConversationReporterIsNullException();
+            Id = new ConversationId(Guid.NewGuid());
+            (Reporter, CreatedAt, UpdatedAt) = (reporter, createdAt, updatedAt);
+        }
+        public static Conversation Create(Reporter reporter, Agent intialAgent)
+        {
+            if (reporter == null) throw new TicketConversationReporterIsNullException();
             if (intialAgent == null) throw new TicketConversationAgentIsNullException();
 
-            var conversation = new Conversation(reporter,DateTime.UtcNow,null);
-            conversation._agentIds.Add(intialAgent.Id);
+            var conversation = new Conversation(reporter, DateTime.UtcNow, null);
+            conversation.AddParticipantInternal(intialAgent.Id);
             return conversation;
         }
         internal void AddParticipant(Agent agent)
         {
             if (agent is null) throw new TicketConversationAgentIsNullException();
-            _agentIds.Add(agent.Id);
+            AddParticipantInternal(agent.Id);
 
             Update();
         }
-        public void AgentSends(Agent agent,MessageContent content)
+        public void AgentSends(Agent agent, MessageContent content)
         {
-            if(content == null) throw new TicketMessageContentIsNullException();
+            if (content == null) throw new TicketMessageContentIsNullException();
             if (agent == null) throw new TicketConversationAgentIsNullException();
-            if(!_agentIds.Contains(agent.Id)) throw new TicketConversationAgentNotParticipantException();
-            var message = Message.Create(agent.Id,content,DateTime.UtcNow);
+            if (!_participants.Any(p => p.AgentId == agent.Id)) throw new TicketConversationAgentNotParticipantException();
+            var message = Message.Create(agent.Id, content, DateTime.UtcNow);
 
             this._messages.Add(message);
             Update();
         }
         public void ReporterSends(MessageContent content)
         {
-            if(content == null) throw new TicketMessageContentIsNullException();
-            var message = Message.Create(Reporter.Id,content,DateTime.UtcNow);
+            if (content == null) throw new TicketMessageContentIsNullException();
+            var message = Message.Create(Reporter.Id, content, DateTime.UtcNow);
 
             this._messages.Add(message);
 
             Update();
         }
-        private void Update() => UpdatedAt = DateTime.UtcNow;   
+        private void AddParticipantInternal(AgentId agentId)
+        {
+            if (_participants.Any(p => p.AgentId == agentId)) return;   
+            _participants.Add(new ConversationAgent(Id, agentId));
+        }
+
+        private void Update() => UpdatedAt = DateTime.UtcNow;
     }
 
 

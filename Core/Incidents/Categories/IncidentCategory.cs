@@ -14,15 +14,18 @@ namespace Core.Incidents.Categories
 
         public SpecializationMatchRule SpecializationMatchRule { get;}
 
-        private IncidentCategory(SpecializationMatchRule rule,AgentSeniority requiredSeniority, IReadOnlyCollection<AgentSpecialization> requiredSpecializations) =>
-            (SpecializationMatchRule,RequiredSeniority,RequiredSpecializations) = (rule,requiredSeniority,requiredSpecializations);
+        private IncidentCategory() { }
+        private IncidentCategory(string name , SpecializationMatchRule rule,AgentSeniority requiredSeniority, IReadOnlyCollection<AgentSpecialization> requiredSpecializations) =>
+            (Name,SpecializationMatchRule,RequiredSeniority,RequiredSpecializations) = (name,rule,requiredSeniority,requiredSpecializations);
 
-        public static IncidentCategory Create(SpecializationMatchRule rule,AgentSeniority seniority, IReadOnlyCollection<AgentSpecialization> specializations)
+        public static IncidentCategory Create(string name , SpecializationMatchRule rule,AgentSeniority seniority, IReadOnlyCollection<AgentSpecialization> specializations)
         {
             if (specializations is null) throw new IncidentCategorySpecializationIsNullException();
             if (seniority == null) throw new IncidentCategorySeniorityIsNullException(); 
 
-            return new IncidentCategory(rule,seniority,specializations);        
+            var cat = new IncidentCategory(name,rule,seniority,specializations);        
+            cat.Id = new IncidentCategoryId(Guid.NewGuid());
+            return cat;
 
         }
 

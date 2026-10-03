@@ -12,7 +12,7 @@ namespace Core.Incidents.Categories
         public string Name => "Network";
         public NetworkSymptomType Symptom { get; private set; }
         private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations) => 
-            (Category,Symptom) = (IncidentCategory.Create(rule,seniority,specializations),symptom);
+            (Category,Symptom) = (IncidentCategory.Create(Name,rule,seniority,specializations),symptom);
         public static NetworkIncident Create(NetworkSymptomType symptom,SpecializationMatchRule rule, AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations)
         {
             if (seniority == null) throw new IncidentCategorySeniorityIsNullException();

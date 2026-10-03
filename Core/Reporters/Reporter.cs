@@ -19,6 +19,7 @@ namespace Core.Reporters
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
+        private Reporter() { }
         private Reporter(User user,ReporterState state, DateTime createdAt, DateTime? updatedAt) =>
             (User,State,CreatedAt,UpdatedAt) = (user,state,createdAt,updatedAt);
 
@@ -26,7 +27,9 @@ namespace Core.Reporters
         {
             if (user == null) throw new UserIsNullException();
             var state = new ActiveReporterState();
-            return new Reporter(user,state, DateTime.UtcNow, null);
+            var reporter =  new Reporter(user,state, DateTime.UtcNow, null);
+            reporter.Id = new ReporterId(Guid.NewGuid());
+            return reporter;
         }
         public void ReportIncident(Incident incident)
         {

@@ -25,6 +25,7 @@ namespace Core.Agents
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
+        private Agent() { }
         private Agent(User user, AgentState state,AgentSeniority seniority, DateTime createdAt, DateTime? updatedAt) =>
             (User,State,Seniority,CreatedAt,UpdatedAt) = (user, state, seniority, createdAt, updatedAt);
 
@@ -34,7 +35,10 @@ namespace Core.Agents
             if(state is null) throw new AgentStateIsNullException();
             if (seniority is null) throw new AgentSeniorityIsNullException();
 
-            return new Agent(user, state, seniority,DateTime.UtcNow, null);
+            var agent = new Agent(user, state, seniority,DateTime.UtcNow, null);
+            agent.Id = new AgentId(Guid.NewGuid());
+
+            return agent;
 
         }
         public bool HasSpecialization(AgentSpecialization specialization) => _agentSpecializations.Contains(specialization);

@@ -14,6 +14,7 @@ namespace Core.Agents
 
         public string Name { get; private set; }
 
+        private Specialization() { }
         private Specialization(string name) => Name = name;
 
         public override string ToString() => $"Specialization : {Name}";

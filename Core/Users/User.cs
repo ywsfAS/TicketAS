@@ -21,6 +21,7 @@ namespace Core.Users
         public static User Create(UserName userName, Email email, PhoneNumber number) =>
             new User
             {
+                Id = new UserId(Guid.NewGuid()),
                 UserName = userName,
                 Email = email,
                 PhoneNumber = number,

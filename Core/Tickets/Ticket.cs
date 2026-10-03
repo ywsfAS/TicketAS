@@ -8,6 +8,7 @@ using Core.Tickets.Messages;
 using Core.Tickets.TicketLifecycle;
 using Core.Tickets.TicketPriotities;
 using Core.Utilities;
+using System.Runtime.CompilerServices;
 
 namespace Core
 {
@@ -32,8 +33,7 @@ namespace Core
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
-        private Ticket(TicketTitle name, TicketDescription description, Reporter reporter,Agent agent,Incident incident,TicketPriority priority,Conversation conversation,TicketLifecycle lifecycle, DateTime createdAt, DateTime? updatedAt) =>
-            (Title,Description,Reporter,Agent,Incident,Priority,Conversation,Lifecycle,CreatedAt,UpdatedAt) 
+        private Ticket(TicketTitle name, TicketDescription description, Reporter reporter,Agent agent,Incident incident,TicketPriority priority,Conversation conversation,TicketLifecycle lifecycle, DateTime createdAt, DateTime? updatedAt) => (Title,Description,Reporter,Agent,Incident,Priority,Conversation,Lifecycle,CreatedAt,UpdatedAt) 
             = (name, description, reporter, agent, incident, priority, conversation, lifecycle, createdAt, updatedAt);
 
         public static Ticket Create(TicketTitle name, TicketDescription description, Reporter reporter,Agent agent,Incident incident,TicketPriority priority)
@@ -47,9 +47,13 @@ namespace Core
             if (!IsQualified(incident, agent)) throw new TicketAgentIsNotQualifiedForIncident();
 
             var conversation = Conversation.Create(reporter,agent);
-            var lifecycle = new OpenLifecycle();
 
-            return new Ticket(name, description, reporter, agent, incident, priority, conversation , lifecycle , DateTime.UtcNow,null);
+            var lifecycle = new OpenLifecycle();
+            
+            
+            var ticket = new Ticket(name, description, reporter, agent, incident, priority, conversation , lifecycle , DateTime.UtcNow,null);
+            ticket.Id = new TicketId(Guid.NewGuid());
+            return ticket;
 
         }
         private static bool IsQualified(Incident incident,Agent agent) => incident.Category.IsQualified(agent);

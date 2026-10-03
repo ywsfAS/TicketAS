@@ -47,7 +47,10 @@ namespace Core.Incidents
             var sla = UpdateIncidentSla(behavior, scope, env);
 
 
-            return new Incident(title,description,reporter,category,behavior,env,severity,scope,sla,now);
+            var incident = new Incident(title,description,reporter,category,behavior,env,severity,scope,sla,now);
+            incident.Id = new IncidentId(Guid.NewGuid());
+
+            return incident;
         }
         public void ChangeTitle(IncidentTitle title)
         {

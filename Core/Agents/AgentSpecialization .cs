@@ -9,7 +9,10 @@ namespace Core.Agents
         public AgentId AgentId { get; private set; }
         public SpecializationId SpecializationId { get; private set; }
 
-        private AgentSpecialization(AgentId id, SpecializationId specialization) => (AgentId,SpecializationId) = (id , specialization);
+        private AgentSpecialization() { }
+
+        private AgentSpecialization(AgentId id, SpecializationId specialization) => 
+            (Id,AgentId,SpecializationId) = (new AgentSpecializationId(Guid.NewGuid()),id , specialization);
 
         public static AgentSpecialization Create(AgentId id, SpecializationId specialization) => new AgentSpecialization(id, specialization);
 

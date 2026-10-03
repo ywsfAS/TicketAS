@@ -23,6 +23,7 @@ namespace Core.Incidents
         public IncidentDeadline Acknowledgement { get; }
         public IncidentDeadline Resolution { get; }
 
+        private IncidentSla() { }
         private IncidentSla(IncidentDeadline ack, IncidentDeadline res) => (Acknowledgement,Resolution) = (ack,res);
 
         public static IncidentSla Create(IncidentDeadline ack , IncidentDeadline res)

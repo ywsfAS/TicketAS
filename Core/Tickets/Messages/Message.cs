@@ -15,7 +15,10 @@ namespace Core.Tickets.Messages
         public static Message Create(ConversationParticipantId id,MessageContent content , DateTime sentAt)
         {
             if (content == null) throw new TicketMessageContentIsNullException();
-            return new Message(id,content, sentAt);
+            var message =  new Message(id,content, sentAt);
+            message.Id = new MessageId(Guid.NewGuid());
+
+            return message;
         }
 
 

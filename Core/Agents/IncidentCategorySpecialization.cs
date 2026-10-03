@@ -10,12 +10,15 @@ namespace Core.Agents
 
         public SpecializationId SpecializationId { get; }
 
+        private IncidentCategorySpecialization() { }
+
         public IncidentCategorySpecialization(
             IncidentCategoryId categoryId,
-            SpecializationId specialization)
+            SpecializationId specializationId)
         {
+            Id = new IncidentSpecializationId(Guid.NewGuid());
             CategoryId = categoryId;
-            SpecializationId = specialization;
+            SpecializationId = specializationId;
         }
     }
 }
