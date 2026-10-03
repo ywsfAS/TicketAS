@@ -13,11 +13,7 @@ namespace Infrastructure.Persistence.Configurations
         {
             builder.ToTable("IncidentCategorySpecializations");
 
-            builder.HasKey(x => new
-            {
-                x.CategoryId,
-                x.Specialization
-            });
+            builder.HasKey(x => x.CategoryId);
 
             builder.Property(x => x.CategoryId)
                 .HasConversion(
@@ -26,15 +22,23 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("uniqueidentifier")
                 .IsRequired();
 
-            builder.Property(x => x.Specialization)
+            builder.Property(x => x.SpecializationId)
+                .HasConversion(
+                   id => id.id,
+                   value => new SpecializationId(value)
+                )
                 .HasMaxLength(50)
-                .HasColumnType("nvarchar(50)")
+                .HasColumnType("uniqueidentifier")
                 .IsRequired();
 
             builder.HasOne<IncidentCategory>()
                 .WithMany()
                 .HasForeignKey(x => x.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne<IncidentCategorySpecialization>()
+                .WithMany()
+                .HasForeignKey(x => x.SpecializationId);
         }
     }
 }

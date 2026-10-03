@@ -1,4 +1,5 @@
 using Core.Incidents;
+using Core.Incidents.Categories;
 using Core.Incidents.Environments;
 using Core.Incidents.Scope;
 using Core.Incidents.Severity;
@@ -51,7 +52,6 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired();
 
 
-
             builder.Property(i => i.Environment)
                 .HasConversion(
                     env => env.Name,
@@ -83,6 +83,10 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(i => i.UpdatedAt)
                 .HasColumnType("datetime2");
+
+            builder.HasOne<Incident>()
+                .WithOne()
+                .HasForeignKey<IncidentCategory>(s => s.Id);
 
         }
         public static InfrastructureEnvironment CreateEnv(string name)

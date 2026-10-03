@@ -1,22 +1,17 @@
-using Core.Incidents.Categories;
+
+using Core.Utilities;
 
 namespace Core.Agents
 {
-    public sealed record AgentSpecialization 
+    public sealed record AgentSpecializationId(Guid Id) : StrongTypedId(Id);
+    public sealed class AgentSpecialization : Entity<AgentSpecializationId>
     {
-        public static readonly AgentSpecialization Network = new("Network");
-        public static readonly AgentSpecialization Infrastructure = new("Infrastructure");
-        public static readonly AgentSpecialization Database = new("Database");
+        public AgentId AgentId { get; private set; }
+        public SpecializationId SpecializationId { get; private set; }
 
-        private static readonly AgentSpecialization[] All = [Network,Infrastructure,Database];  
+        private AgentSpecialization(AgentId id, SpecializationId specialization) => (AgentId,SpecializationId) = (id , specialization);
 
-        public string Name { get;}
-        public IncidentCategoryId CategoryId { get;}
-
-        private AgentSpecialization(string name) => Name = name;
-
-        public static AgentSpecialization? FindByName(string name) =>
-            All.FirstOrDefault((n) => n.Name == name);
+        public static AgentSpecialization Create(AgentId id, SpecializationId specialization) => new AgentSpecialization(id, specialization);
 
     }
 }

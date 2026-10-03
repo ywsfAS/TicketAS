@@ -12,6 +12,7 @@ namespace Core.Agents
     public class Agent : Entity<AgentId>
     {
         public User User { get; private set; }
+        public UserId UserId { get; private set; }
         public AgentSeniority Seniority { get; private set; }
 
         private HashSet<AgentSpecialization> _agentSpecializations = new();
