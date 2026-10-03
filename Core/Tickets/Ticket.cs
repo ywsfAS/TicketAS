@@ -11,15 +11,20 @@ using Core.Utilities;
 
 namespace Core
 {
-    public sealed record TicketId(Guid Value) : StrongTypedId(Value);
+    public sealed record TicketId(Guid Id) : StrongTypedId(Id);
 
     public sealed class Ticket : Entity<TicketId>
     {
         public TicketTitle Title { get; private set; }
         public TicketDescription Description { get; private set; }
         public Reporter Reporter { get; private set; }
+        public ReporterId ReporterId { get; private set; }
+
         public Agent Agent { get; private set; }
+        public AgentId AgentId { get; private set; }
+
         public Incident Incident { get; private set; }
+        public IncidentId IncidentId { get; private set; }
         public TicketPriority Priority { get; private set; }
         public Conversation Conversation { get; private set; }
         public TicketLifecycle Lifecycle { get; private set; }
