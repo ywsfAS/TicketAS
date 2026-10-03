@@ -86,6 +86,14 @@ namespace Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(x => x.IncidentId);
 
+            builder.Property(t => t.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("(GETDATE())")
+                .HasColumnType("datetime2");
+
+            builder.Property(t => t.UpdatedAt)
+                .HasColumnType("datetime2");
+
         }
         public static TicketPriority MapPriority(int level)
         {
