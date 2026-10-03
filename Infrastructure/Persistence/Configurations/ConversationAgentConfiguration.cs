@@ -30,11 +30,6 @@ namespace Infrastructure.Persistence.Configurations
                     value => new AgentId(value))
                 .ValueGeneratedNever();
 
-            builder.HasOne<Conversation>()
-                .WithMany()
-                .HasForeignKey(x => x.ConversationId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasOne<Agent>()
                 .WithMany()
                 .HasForeignKey(x => x.AgentId)

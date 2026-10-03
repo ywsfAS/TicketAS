@@ -21,10 +21,14 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("uniqueidentifier")
                 .ValueGeneratedNever();
 
+
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
+            builder.HasIndex(x => x.Name, "UQ_IncidentCategories_Name").IsUnique();
+
             builder.Property(x => x.RequiredSeniority)
                 .HasConversion(
                     seniority => seniority.Name,
-                    name => AgentSeniority.FindByName(name)
+                    name => MapSeniority(name)
                  )
                 .HasMaxLength(20)
                 .HasColumnType("nvarchar(20)")
@@ -38,5 +42,7 @@ namespace Infrastructure.Persistence.Configurations
 
 
         }
+        private static AgentSeniority MapSeniority(string name) =>
+        AgentSeniority.FindByName(name) ?? throw new InvalidOperationException($"Unknown seniority '{name}' in database.");
     }
 }

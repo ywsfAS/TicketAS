@@ -1,5 +1,4 @@
 using Core.Reporters;
-using Core.Reporters.ReportStates;
 using Core.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -29,12 +28,13 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(r => r.User)
                 .WithOne()
-                .HasForeignKey<Reporter>(r => r.UserId);
+                .HasForeignKey<Reporter>(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(r => r.State)
                 .HasConversion(
                     s => s.Name,
-                    value => CreateReporterState(value)
+                    value => DomainLookups.ReporterState(value)
                 )
                 .HasMaxLength(20)
                 .HasColumnType("nvarchar(20)")
@@ -50,17 +50,14 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasIndex(r => r.UserId, "XI_Reporters_UserId");
 
-        }
-        private static ReporterState CreateReporterState(string value)
-        {
-            return value switch
-            {
-                "Active" => new ActiveReporterState(),
-                "Suspended" => new SuspendedReporterState(),
-                "Blocked" => new BlockedReporterState(),
-                _ => throw new InvalidOperationException(
-                    $"Unknown reporter state: {value}")
-            };
+            builder.HasMany(r => r.Incidents)
+                .WithOne(i => i.Reporter)
+                .HasForeignKey(i => i.ReporterId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Navigation(r => r.Incidents)
+                .HasField("_Incidents")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
         }
     }
 }

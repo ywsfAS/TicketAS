@@ -1,4 +1,5 @@
 using Core.Users;
+using Core.Users.UserStates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -42,6 +43,12 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(16)
                 .HasColumnType("nvarchar(16)");
+
+            builder.Property<UserState>("_state")
+                .HasColumnName("State")
+                .HasConversion(s => s.Name, value => DomainLookups.UserState(value))
+                .HasMaxLength(20)
+                .IsRequired();
 
             builder.Property(u => u.CreatedAt)
                 .IsRequired()

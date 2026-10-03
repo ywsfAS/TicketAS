@@ -15,6 +15,11 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasKey(x => x.CategoryId);
 
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                .HasConversion(id => id.Id, value => new IncidentSpecializationId(value))
+                .ValueGeneratedNever();
+
             builder.Property(x => x.CategoryId)
                 .HasConversion(
                     id => id.Id,
@@ -36,9 +41,13 @@ namespace Infrastructure.Persistence.Configurations
                 .HasForeignKey(x => x.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne<IncidentCategorySpecialization>()
+            builder.HasOne<Specialization>()
                 .WithMany()
-                .HasForeignKey(x => x.SpecializationId);
+                .HasForeignKey(x => x.SpecializationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(x => new { x.CategoryId, x.SpecializationId }, "UQ_IncidentCategorySpecializations_Category_Specialization")
+                .IsUnique();
         }
     }
 }

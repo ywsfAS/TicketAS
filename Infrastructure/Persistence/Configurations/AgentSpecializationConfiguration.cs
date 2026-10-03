@@ -1,5 +1,4 @@
 using Core.Agents;
-using Core.Incidents.Categories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,8 +11,7 @@ namespace Infrastructure.Persistence.Configurations
         {
 
             builder.ToTable("AgentSpecializations");
-
-
+ 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .HasConversion(
@@ -24,14 +22,23 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("uniqueidentifier")
                 .IsRequired();
 
-            builder.HasOne<Agent>()
-                .WithMany()
-                .HasForeignKey(x => x.AgentId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(x => x.AgentId)
+                .HasConversion(id => id.Id, value => new AgentId(value))
+                .IsRequired();
 
-            builder.HasOne<AgentSpecialization>()
+            builder.Property(x => x.SpecializationId)
+                .HasConversion(id => id.id, value => new SpecializationId(value))
+                .IsRequired();
+
+
+            builder.HasOne<Specialization>()
                 .WithMany()
-                .HasForeignKey(x => x.SpecializationId);
+                .HasForeignKey(x => x.SpecializationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.HasIndex(x => new { x.AgentId, x.SpecializationId }, "UQ_AgentSpecializations_Agent_Specialization")
+                .IsUnique();
 
         }
     }
