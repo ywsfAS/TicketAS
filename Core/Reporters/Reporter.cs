@@ -20,8 +20,14 @@ namespace Core.Reporters
         public DateTime? UpdatedAt { get; private set; }
 
         private Reporter() { }
-        private Reporter(User user,ReporterState state, DateTime createdAt, DateTime? updatedAt) =>
-            (User,State,CreatedAt,UpdatedAt) = (user,state,createdAt,updatedAt);
+        private Reporter(User user, ReporterState state, DateTime createdAt, DateTime? updatedAt)
+        {
+            User = user;
+            UserId = user.Id;
+            State = state;
+            CreatedAt = createdAt;
+            UpdatedAt = updatedAt;
+        }
 
         public static Reporter Create(User user)
         {
