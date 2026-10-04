@@ -8,11 +8,33 @@ namespace Core.Incidents.Categories
 {
     public sealed class NetworkIncident : IIncidentCategoryBehavior
     {
+        public IncidentCategoryId CategoryId { get; private set; }
         public IncidentCategory Category { get; private set; }
         public string Name => "Network";
         public NetworkSymptomType Symptom { get; private set; }
-        private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations) => 
-            (Category,Symptom) = (IncidentCategory.Create(Name,rule,seniority,specializations),symptom);
+        private NetworkIncident() { }
+        private NetworkIncident(NetworkSymptomType symptom,SpecializationMatchRule rule,AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations)
+        {
+            Category = IncidentCategory.Create(Name, rule, seniority, specializations);
+            CategoryId = Category.Id;
+            Symptom = symptom;
+        }
+
+        private NetworkIncident(IncidentCategory category, NetworkSymptomType symptom)
+        {
+            Category = category;
+            CategoryId = category.Id;
+            Symptom = symptom;
+        }
+
+        public static NetworkIncident Create(IncidentCategory category, NetworkSymptomType symptom)
+        {
+            if (category is null) throw new IncidentCategoryIsNullException();
+            if (!string.Equals(category.Name, "Network", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Network symptoms can only be used with the Network category.", nameof(category));
+
+            return new NetworkIncident(category, symptom);
+        }
         public static NetworkIncident Create(NetworkSymptomType symptom,SpecializationMatchRule rule, AgentSeniority seniority , IReadOnlyCollection<AgentSpecialization> specializations)
         {
             if (seniority == null) throw new IncidentCategorySeniorityIsNullException();

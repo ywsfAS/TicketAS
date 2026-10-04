@@ -16,7 +16,6 @@ namespace Core.Incidents
 
         public IncidentCategory Category { get; private set; }
         public IncidentCategoryId CategoryId { get; private set; }
-
         public IIncidentCategoryBehavior Behavior { get; private set; } 
         public InfrastructureEnvironment Environment { get; private set; }
         public IncidentSeverity IncidentSeverity { get; private set; }
@@ -29,8 +28,8 @@ namespace Core.Incidents
 
         private Incident() { }  
         private Incident(IncidentTitle title, IncidentDescription description, Reporter reporter, IncidentCategory category,IIncidentCategoryBehavior behavior, InfrastructureEnvironment environment, IncidentSeverity incidentSeverity,  IncidentScope scope,IncidentSla sla,DateTime CreatedAt) =>
-            (Title, Description, Reporter, Category,Behavior, Environment, IncidentSeverity, Scope,IncidentSla,CreatedAt,UpdatedAt) = 
-            (title,description,reporter,category,behavior,environment,incidentSeverity,scope,sla,CreatedAt,null);
+            (Title, Description, Reporter, ReporterId, Category, CategoryId, Behavior, Environment, IncidentSeverity, Scope,IncidentSla,CreatedAt,UpdatedAt) =
+            (title,description,reporter,reporter.Id,category,category.Id,behavior,environment,incidentSeverity,scope,sla,CreatedAt,null);
 
         public static Incident Create(IncidentTitle title , IncidentDescription description , Reporter reporter , IncidentCategory category,IIncidentCategoryBehavior behavior,IncidentScope scope , InfrastructureEnvironment env)
         {
@@ -56,11 +55,13 @@ namespace Core.Incidents
         {
             if (title == null) throw new IncidentTitleIsNullException();
             Title = title;
+            Update();
         }
         public void ChangeDescription(IncidentDescription description)
         {
             if (description == null) throw new IncidentDescriptionIsNullException();
             Description = description;
+            Update();
         }
         public void ChangeScope(IncidentScope scope)
         {
@@ -68,7 +69,13 @@ namespace Core.Incidents
             Scope = scope;
             ChangeSeverity(UpdateSeverity(Behavior,Scope,Environment));
             ChangeIncidentSla(UpdateIncidentSla(Behavior,Scope,Environment));
+            Update();
             
+        }
+        public void ChangeScope(IncidentScope scope, IIncidentCategoryBehavior behavior)
+        {
+            Behavior = behavior;
+            ChangeScope(scope);
         }
         public void ChangeEnvironment(InfrastructureEnvironment env)
         {
@@ -76,6 +83,12 @@ namespace Core.Incidents
             Environment = env;
             ChangeSeverity(UpdateSeverity(Behavior,Scope,Environment));
             ChangeIncidentSla(UpdateIncidentSla(Behavior,Scope,Environment));
+            Update();
+        }
+        public void ChangeEnvironment(InfrastructureEnvironment env, IIncidentCategoryBehavior behavior)
+        {
+            Behavior = behavior;
+            ChangeEnvironment(env);
         }
         private static IncidentSla UpdateIncidentSla(IIncidentCategoryBehavior category , IncidentScope scope , InfrastructureEnvironment env)
         {
@@ -86,6 +99,7 @@ namespace Core.Incidents
         }
         private void ChangeIncidentSla(IncidentSla incidentSla) => IncidentSla = incidentSla;
         private void ChangeSeverity(IncidentSeverity severity) => IncidentSeverity = severity;
+        private void Update() => UpdatedAt = DateTime.UtcNow;
         private static IncidentSeverity UpdateSeverity(IIncidentCategoryBehavior category , IncidentScope scope , InfrastructureEnvironment environment) => 
            IncidentSeverityExtension.Max([category.GetMinimalSeverityLevel(),scope.GetMinimalSeverityLevel(),environment.GetMinimalSeverityLevel()]);
 

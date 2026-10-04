@@ -40,7 +40,6 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("nvarchar(10)")
                 .IsRequired();
 
-
         }
         private static AgentSeniority MapSeniority(string name) =>
         AgentSeniority.FindByName(name) ?? throw new InvalidOperationException($"Unknown seniority '{name}' in database.");

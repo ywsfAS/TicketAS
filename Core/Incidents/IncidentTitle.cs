@@ -51,8 +51,8 @@ namespace Core.Incidents
             if (segments.Length < 2) throw new IncidentTitleException("Invalid incident title format");
             return (segments[0], segments[1]);
         }
-        private static bool IsValidProblem(string problem) => !string.IsNullOrEmpty(problem) && problem.Length <= MaxProblemLength && !problem.Any((c) => InvalidSegments.Contains(c)) && !problem.Split(" ").Any((w) => InvalidProblemKeywords.Contains(w));
-        private static bool IsValidService(string service) => !string.IsNullOrEmpty(service) && service.Length <= MaxServiceLength && !service.Any((c) => InvalidSegments.Contains(c)) && !service.Split(" ").Any((w) => InvalidServiceKeywords.Contains(w));
+        public static bool IsValidProblem(string problem) => !string.IsNullOrEmpty(problem) && problem.Length <= MaxProblemLength && !problem.Any((c) => InvalidSegments.Contains(c)) && !problem.Split(" ").Any((w) => InvalidProblemKeywords.Contains(w));
+        public static bool IsValidService(string service) => !string.IsNullOrEmpty(service) && service.Length <= MaxServiceLength && !service.Any((c) => InvalidSegments.Contains(c)) && !service.Split(" ").Any((w) => InvalidServiceKeywords.Contains(w));
 
     }
 }

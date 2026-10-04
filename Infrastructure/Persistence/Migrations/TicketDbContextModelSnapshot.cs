@@ -226,6 +226,19 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Incidents", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Incidents.Categories.NetworkIncident", b =>
+                {
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Symptom")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("NetworkIncidentCategories", (string)null);
+                });
+
             modelBuilder.Entity("Core.Reporters.Reporter", b =>
                 {
                     b.Property<Guid>("Id")
@@ -556,6 +569,17 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Reporter");
+                });
+
+            modelBuilder.Entity("Core.Incidents.Categories.NetworkIncident", b =>
+                {
+                    b.HasOne("Core.Incidents.Categories.IncidentCategory", "Category")
+                        .WithOne()
+                        .HasForeignKey("Core.Incidents.Categories.NetworkIncident", "CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Core.Reporters.Reporter", b =>

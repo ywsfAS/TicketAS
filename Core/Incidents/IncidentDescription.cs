@@ -27,7 +27,7 @@ namespace Core.Incidents
 
             return new IncidentDescription(description);
         }
-        private static bool IsValidDescription(string Description) => !string.IsNullOrEmpty(Description)
+        public static bool IsValidDescription(string Description) => !string.IsNullOrEmpty(Description)
             && Description.Length <= MaxLength
             && Description.Length >= MinLength;
 

@@ -18,6 +18,7 @@ namespace Infrastructure.Persistence
         public DbSet<Agent> Agents => Set<Agent>();
         public DbSet<Specialization> Specializations => Set<Specialization>();
         public DbSet<IncidentCategory> IncidentCategories => Set<IncidentCategory>();
+        public DbSet<NetworkIncident> NetworkIncidentCategories => Set<NetworkIncident>();
         public DbSet<Incident> Incidents => Set<Incident>();
         public DbSet<Reporter> Reporters => Set<Reporter>();
         public DbSet<Ticket> Tickets => Set<Ticket>();
@@ -42,4 +43,3 @@ namespace Infrastructure.Persistence
         }
     }
 }
-
