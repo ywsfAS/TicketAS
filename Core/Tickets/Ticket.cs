@@ -33,6 +33,8 @@ namespace Core
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
+        private Ticket() { }
+
         private Ticket(TicketTitle name, TicketDescription description, Reporter reporter,Agent agent,Incident incident,TicketPriority priority,Conversation conversation,TicketLifecycle lifecycle, DateTime createdAt, DateTime? updatedAt) => (Title,Description,Reporter,Agent,Incident,Priority,Conversation,Lifecycle,CreatedAt,UpdatedAt) 
             = (name, description, reporter, agent, incident, priority, conversation, lifecycle, createdAt, updatedAt);
 

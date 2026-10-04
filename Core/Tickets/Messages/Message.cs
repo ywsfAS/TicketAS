@@ -10,6 +10,7 @@ namespace Core.Tickets.Messages
         public MessageContent Content { get; private set; }
         public DateTime SentAt { get; private set; }
 
+        private Message() { }
         private Message(ConversationParticipantId id,MessageContent content , DateTime sentAt) => 
             (ParticipantId,Content, SentAt) = (id, content, sentAt);
         public static Message Create(ConversationParticipantId id,MessageContent content , DateTime sentAt)
