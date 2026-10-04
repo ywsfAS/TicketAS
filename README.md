@@ -1,6 +1,6 @@
 # TicketAS
 
-A domain-driven IT support ticketing system built with C# and .NET 8, currently containing the domain layer (`Core`) and its unit test suite (`Core.Tests`).
+A domain-driven IT support ticketing system built with C# and .NET 8.
 
 ## Overview
 
@@ -23,8 +23,13 @@ TicketAS/
 │   ├── Enums/                 # Shared domain enums
 │   ├── Exceptions/            # Domain-specific exceptions per aggregate
 │   └── Utilities/             # Base abstractions (Entity<T>, StrongTypedId)
+├── Application/               # MediatR user commands/queries and FluentValidation
+├── Infrastructure/            # EF Core persistence, repositories, and registrations
+├── Api/                       # ASP.NET Core API host and dependency wiring
 └── Core.Tests/                # xUnit test suite mirroring the Core directory layout
 ```
+
+User application operations are defined as a request, validator, and handler per operation. `Application` registers MediatR and validation; `Infrastructure` registers the EF Core user repository and password hasher through `AddInfrastructure`, called by the API host. User registration stores ASP.NET Core Identity password hashes rather than supplied passwords.
 
 ## Getting Started
 

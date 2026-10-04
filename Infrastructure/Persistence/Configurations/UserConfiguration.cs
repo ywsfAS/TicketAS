@@ -27,10 +27,12 @@ namespace Infrastructure.Persistence.Configurations
                 .HasColumnType("nvarchar(20)");
 
             builder.Property(u => u.Password)
-                .HasConversion(pass => pass.Password, value => UserPassword.Create(value))
+                .HasConversion(pass => pass!.Password, value => UserPassword.FromHashedValue(value))
                 .IsRequired()
                 .HasMaxLength(500)
                 .HasColumnType("nvarchar(500)");
+
+            builder.Ignore(u => u.StateName);
 
             builder.Property(u => u.Email)
                 .HasConversion(email => email.Address, value => Email.Create(value))

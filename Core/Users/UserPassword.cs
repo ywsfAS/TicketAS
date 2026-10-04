@@ -24,6 +24,14 @@ namespace Core.Users
 
         }
 
-         public static bool IsValidPassword(string password) => !string.IsNullOrEmpty(password) && password.Length >= MinLength && password.Length <= MaxLength;
+        public static UserPassword FromHashedValue(string hashedValue)
+        {
+            if (string.IsNullOrWhiteSpace(hashedValue) || hashedValue.Length > MaxLength)
+                throw new UserPasswordException("Invalid password hash");
+
+            return new UserPassword { Password = hashedValue };
+        }
+
+        public static bool IsValidPassword(string password) => !string.IsNullOrEmpty(password) && password.Length >= MinLength && password.Length <= MaxLength;
     }
 }

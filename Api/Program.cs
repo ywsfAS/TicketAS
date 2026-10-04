@@ -1,5 +1,5 @@
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using Application;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TicketDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("TicketDb"),
-        sql => sql.MigrationsAssembly(typeof(TicketDbContext).Assembly.GetName().Name)));
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 

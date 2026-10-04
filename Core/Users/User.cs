@@ -9,8 +9,9 @@ namespace Core.Users
     {
         public UserName UserName { get; private set; }
         public Email Email { get; private set; }
-        public UserPassword Password { get; private set; }
+        public UserPassword? Password { get; private set; }
         public PhoneNumber PhoneNumber { get; private set; }
+        public string StateName => _state.Name;
 
         private UserState _state;
 
@@ -24,6 +25,19 @@ namespace Core.Users
                 Id = new UserId(Guid.NewGuid()),
                 UserName = userName,
                 Email = email,
+                PhoneNumber = number,
+                _state = new ActiveUser(),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = null
+            };
+
+        public static User Create(UserName userName, Email email, PhoneNumber number, UserPassword password) =>
+            new User
+            {
+                Id = new UserId(Guid.NewGuid()),
+                UserName = userName,
+                Email = email,
+                Password = password,
                 PhoneNumber = number,
                 _state = new ActiveUser(),
                 CreatedAt = DateTime.UtcNow,
