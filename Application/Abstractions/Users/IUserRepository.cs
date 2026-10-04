@@ -1,5 +1,6 @@
 using Application.Common;
 using Core.Users;
+using Core.Users.UserStates;
 
 namespace Application.Abstractions.Users;
 

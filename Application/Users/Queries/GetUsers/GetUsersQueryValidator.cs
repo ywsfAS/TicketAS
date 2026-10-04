@@ -19,5 +19,9 @@ public sealed class GetUsersQueryValidator : AbstractValidator<GetUsersQuery>
         RuleFor(query => query.PhoneNumber)
             .Must(value => string.IsNullOrWhiteSpace(value) || Core.Users.PhoneNumber.IsValidPhoneNumber(value))
             .WithMessage("A valid phone number containing 9 to 15 digits is required.");
+        RuleFor(query => query.State)
+            .Must(value => string.IsNullOrWhiteSpace(value)
+                || value is "Active" or "Locked" or "Deactivated")
+            .WithMessage("State must be Active, Locked, or Deactivated.");
     }
 }

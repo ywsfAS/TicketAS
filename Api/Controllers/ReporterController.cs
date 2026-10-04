@@ -4,6 +4,8 @@ using Application.Reporters.Commands.BlockReporter;
 using Application.Reporters.Commands.CreateReporter;
 using Application.Reporters.Commands.SuspendReporter;
 using Application.Reporters.Queries.GetMyReporter;
+using Application.Reporters.Queries.SearchReporters;
+using Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,22 @@ namespace Api.Controllers;
 [Route("api/reporters")]
 public sealed class ReporterController(ISender sender) : ControllerBase
 {
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(PagedResult<ReporterDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<PagedResult<ReporterDto>>> Search(
+        [FromQuery] string? state,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await sender.Send(
+            new SearchReportersQuery(state, page, pageSize),
+            cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost("me")]
     [ProducesResponseType<ReporterDto>(StatusCodes.Status201Created)]
     [ProducesResponseType<ReporterDto>(StatusCodes.Status200OK)]

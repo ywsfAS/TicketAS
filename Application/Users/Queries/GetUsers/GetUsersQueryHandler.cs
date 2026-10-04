@@ -1,6 +1,7 @@
 using Application.Abstractions.Users;
 using Application.Common;
 using Core.Users;
+using Core.Users.UserStates;
 using MediatR;
 
 namespace Application.Users.Queries.GetUsers;
@@ -16,7 +17,8 @@ public sealed class GetUsersQueryHandler(IUserRepository userRepository)
             new UserSearchCriteria(
                 string.IsNullOrWhiteSpace(request.UserName) ? null : UserName.Create(request.UserName),
                 string.IsNullOrWhiteSpace(request.Email) ? null : Email.Create(request.Email),
-                string.IsNullOrWhiteSpace(request.PhoneNumber) ? null : PhoneNumber.Create(request.PhoneNumber)),
+                string.IsNullOrWhiteSpace(request.PhoneNumber) ? null : PhoneNumber.Create(request.PhoneNumber),
+                UserStateFor(request.State)),
             request.Page,
             request.PageSize,
             cancellationToken);
@@ -27,4 +29,13 @@ public sealed class GetUsersQueryHandler(IUserRepository userRepository)
             result.PageSize,
             result.TotalCount);
     }
+
+    private static UserState? UserStateFor(string? state) => state switch
+    {
+        null or "" => null,
+        "Active" => new ActiveUser(),
+        "Locked" => new LockedUser(),
+        "Deactivated" => new DeactivatedUser(),
+        _ => throw new InvalidOperationException("User state must be validated before handling the query.")
+    };
 }

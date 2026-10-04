@@ -27,12 +27,13 @@ public sealed class UserController(ISender sender) : ControllerBase
         [FromQuery] string? userName,
         [FromQuery] string? email,
         [FromQuery] string? phoneNumber,
+        [FromQuery] string? state,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken cancellationToken = default)
     {
         var result = await sender.Send(
-            new GetUsersQuery(userName, email, phoneNumber, page, pageSize),
+            new GetUsersQuery(userName, email, phoneNumber, state, page, pageSize),
             cancellationToken);
         return Ok(result);
     }

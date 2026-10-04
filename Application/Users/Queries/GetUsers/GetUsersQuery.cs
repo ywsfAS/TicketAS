@@ -7,5 +7,6 @@ public sealed record GetUsersQuery(
     string? UserName = null,
     string? Email = null,
     string? PhoneNumber = null,
+    string? State = null,
     int Page = 1,
     int PageSize = 20) : IRequest<PagedResult<UserDto>>;

@@ -26,8 +26,15 @@ namespace Core.Agents
         public DateTime? UpdatedAt { get; private set; }
 
         private Agent() { }
-        private Agent(User user, AgentState state,AgentSeniority seniority, DateTime createdAt, DateTime? updatedAt) =>
-            (User,State,Seniority,CreatedAt,UpdatedAt) = (user, state, seniority, createdAt, updatedAt);
+        private Agent(User user, AgentState state, AgentSeniority seniority, DateTime createdAt, DateTime? updatedAt)
+        {
+            User = user;
+            UserId = user.Id;
+            State = state;
+            Seniority = seniority;
+            CreatedAt = createdAt;
+            UpdatedAt = updatedAt;
+        }
 
         public static Agent Create(User user, AgentState state , AgentSeniority seniority)
         {

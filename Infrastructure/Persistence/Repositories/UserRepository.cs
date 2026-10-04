@@ -38,6 +38,9 @@ public sealed class UserRepository(TicketDbContext dbContext) : IUserRepository
         if (criteria.PhoneNumber is not null)
             users = users.Where(user => user.PhoneNumber == criteria.PhoneNumber);
 
+        if (criteria.State is not null)
+            users = users.Where(user => EF.Property<Core.Users.UserStates.UserState>(user, "_state") == criteria.State);
+
         var totalCount = await users.CountAsync(cancellationToken);
         var offset = (int)Math.Min((long)(page - 1) * pageSize, int.MaxValue);
         var items = await users
