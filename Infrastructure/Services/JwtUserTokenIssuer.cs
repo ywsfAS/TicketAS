@@ -17,12 +17,17 @@ public sealed class JwtUserTokenIssuer(IOptions<JwtOptions> options) : IUserToke
         var expiresAt = now.AddMinutes(jwtOptions.AccessTokenMinutes);
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey));
         var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email.Address),
             new Claim(JwtRegisteredClaimNames.Name, user.UserName.Name)
         };
+
+        if (jwtOptions.AdminUserIds.Contains(user.Id.Id))
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+        }
 
         var token = new JwtSecurityToken(
             issuer: jwtOptions.Issuer,

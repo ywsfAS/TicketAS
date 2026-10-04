@@ -18,4 +18,6 @@ public sealed class JwtOptions
 
     [Range(1, 1440)]
     public int AccessTokenMinutes { get; init; } = 30;
+
+    public Guid[] AdminUserIds { get; init; } = [];
 }

@@ -1,3 +1,4 @@
+using Application.Users;
 using Application.Users.Commands.CreateUser;
 using Application.Users.Commands.Login;
 using MediatR;
