@@ -1,10 +1,13 @@
 using Application.Abstractions.Users;
+using Application.Abstractions.Persistence;
 using Core.Users;
 using MediatR;
 
 namespace Application.Users.Commands.DeactivateUser;
 
-public sealed class DeactivateUserCommandHandler(IUserRepository userRepository)
+public sealed class DeactivateUserCommandHandler(
+    IUserRepository userRepository,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<DeactivateUserCommand, bool>
 {
     public async Task<bool> Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
@@ -14,7 +17,7 @@ public sealed class DeactivateUserCommandHandler(IUserRepository userRepository)
             return false;
 
         user.Deactivate();
-        await userRepository.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
     }
 }

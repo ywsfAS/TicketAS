@@ -1,10 +1,13 @@
 using Application.Abstractions.Users;
+using Application.Abstractions.Persistence;
 using Core.Users;
 using MediatR;
 
 namespace Application.Users.Commands.LockUser;
 
-public sealed class LockUserCommandHandler(IUserRepository userRepository)
+public sealed class LockUserCommandHandler(
+    IUserRepository userRepository,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<LockUserCommand, bool>
 {
     public async Task<bool> Handle(LockUserCommand request, CancellationToken cancellationToken)
@@ -14,7 +17,7 @@ public sealed class LockUserCommandHandler(IUserRepository userRepository)
             return false;
 
         user.Lock();
-        await userRepository.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
     }
 }

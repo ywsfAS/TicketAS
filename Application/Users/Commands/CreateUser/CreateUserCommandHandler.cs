@@ -1,4 +1,5 @@
 using Application.Abstractions.Users;
+using Application.Abstractions.Persistence;
 using Core.Users;
 using MediatR;
 
@@ -6,6 +7,7 @@ namespace Application.Users.Commands.CreateUser;
 
 public sealed class CreateUserCommandHandler(
     IUserRepository userRepository,
+    IUnitOfWork unitOfWork,
     IUserPasswordHasher passwordHasher) : IRequestHandler<CreateUserCommand, UserDto>
 {
     public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -17,6 +19,7 @@ public sealed class CreateUserCommandHandler(
             UserPassword.FromHashedValue(passwordHasher.Hash(request.Password)));
 
         await userRepository.AddAsync(user, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         return UserDto.From(user);
     }
 }

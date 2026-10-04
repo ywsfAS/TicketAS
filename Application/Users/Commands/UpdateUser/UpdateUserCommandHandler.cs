@@ -1,10 +1,13 @@
 using Application.Abstractions.Users;
+using Application.Abstractions.Persistence;
 using Core.Users;
 using MediatR;
 
 namespace Application.Users.Commands.UpdateUser;
 
-public sealed class UpdateUserCommandHandler(IUserRepository userRepository)
+public sealed class UpdateUserCommandHandler(
+    IUserRepository userRepository,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateUserCommand, UserDto?>
 {
     public async Task<UserDto?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -16,7 +19,7 @@ public sealed class UpdateUserCommandHandler(IUserRepository userRepository)
         user.ChangeUserName(UserName.Create(request.UserName));
         user.ChangeEmail(Email.Create(request.Email));
         user.ChangePhoneNumber(PhoneNumber.Create(request.PhoneNumber));
-        await userRepository.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return UserDto.From(user);
     }

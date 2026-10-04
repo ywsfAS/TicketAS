@@ -1,10 +1,13 @@
 using Application.Abstractions.Users;
+using Application.Abstractions.Persistence;
 using Core.Users;
 using MediatR;
 
 namespace Application.Users.Commands.ActivateUser;
 
-public sealed class ActivateUserCommandHandler(IUserRepository userRepository)
+public sealed class ActivateUserCommandHandler(
+    IUserRepository userRepository,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<ActivateUserCommand, bool>
 {
     public async Task<bool> Handle(ActivateUserCommand request, CancellationToken cancellationToken)
@@ -14,7 +17,7 @@ public sealed class ActivateUserCommandHandler(IUserRepository userRepository)
             return false;
 
         user.activate();
-        await userRepository.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
     }
 }

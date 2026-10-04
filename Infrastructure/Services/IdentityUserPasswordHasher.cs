@@ -10,4 +10,8 @@ public sealed class IdentityUserPasswordHasher : IUserPasswordHasher
 
     public string Hash(string password) =>
         _passwordHasher.HashPassword(PasswordHashSubject, password);
+
+    public bool Verify(string hashedPassword, string providedPassword) =>
+        _passwordHasher.VerifyHashedPassword(PasswordHashSubject, hashedPassword, providedPassword)
+        is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded;
 }
