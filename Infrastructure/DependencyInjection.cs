@@ -2,6 +2,7 @@ using Application.Abstractions.Users;
 using Application.Abstractions.Reporters;
 using Application.Abstractions.Agents;
 using Application.Abstractions.Persistence;
+using Application.Abstractions.Incidents;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Services;
@@ -62,6 +63,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IReporterRepository, ReporterRepository>();
         services.AddScoped<IAgentRepository, AgentRepository>();
+        services.AddScoped<IIncidentRepository, IncidentRepository>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddSingleton<IUserPasswordHasher, IdentityUserPasswordHasher>();
         services.AddSingleton<IUserTokenIssuer, JwtUserTokenIssuer>();
